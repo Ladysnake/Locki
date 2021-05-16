@@ -83,7 +83,7 @@ public final class LockiCommand {
         int count = 0;
         for (ServerPlayerEntity player : players) {
             lock.lock(player, invNode);
-            sendImpersonationFeedback(source, player, invNode, "lock");
+            sendFeedback(source, player, invNode, "lock");
             ++count;
         }
         return count;
@@ -93,13 +93,13 @@ public final class LockiCommand {
         int count = 0;
         for (ServerPlayerEntity player : players) {
             lock.unlock(player, invNode);
-            sendImpersonationFeedback(source, player, invNode, "unlock");
+            sendFeedback(source, player, invNode, "unlock");
             ++count;
         }
         return count;
     }
 
-    private static void sendImpersonationFeedback(ServerCommandSource source, ServerPlayerEntity player, InventoryNode invNode, String command) {
+    private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, InventoryNode invNode, String command) {
         String name = invNode.getFullName();
         if (source.getEntity() == player) {
             source.sendFeedback(new TranslatableText("locki:commands." + command + ".success.self", name), true);
