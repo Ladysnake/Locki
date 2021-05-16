@@ -1,0 +1,8 @@
+{
+  "locki:argument.inv_node.invalid": "Unknown inventory node '%s'",
+  "locki:argument.inv_lock.not_found": "Unknown inventory lock '%s'",
+  "locki:commands.lock.success.self": "Locked %s",
+  "locki:commands.lock.success.other": "Locked %2$s for %1$s",
+  "locki:commands.unlock.success.self": "Unlocked %s",
+  "locki:commands.unlock.success.other": "Unlocked %2$s for %1$s"
+}

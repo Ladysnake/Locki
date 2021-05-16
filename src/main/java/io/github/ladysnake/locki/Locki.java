@@ -19,8 +19,11 @@ package io.github.ladysnake.locki;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
+import io.github.ladysnake.locki.impl.LockiCommand;
 import me.lucko.fabric.api.permissions.v0.PermissionCheckEvent;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,9 +37,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public final class Locki implements ModInitializer {
 	public static final Logger LOGGER = LogManager.getLogger("Locki");
+	public static final Pattern NODE_NAME_PART = Pattern.compile("[a-z0-9_-]+");
 
 	private static final Map<Identifier, InventoryLock> locks = new HashMap<>();
 	private static final Map<String, InventoryNode> nodes = new HashMap<>();
@@ -58,8 +64,7 @@ public final class Locki implements ModInitializer {
 	public static synchronized InventoryNode registerNode(InventoryNode parent, String name) {
 		Preconditions.checkNotNull(parent);
 		Preconditions.checkNotNull(name);
-		Preconditions.checkArgument(name.length() > 0, "Node name cannot be empty");
-		Preconditions.checkArgument(name.indexOf('.') < 0, "Illegal character '.' in node name");
+		Preconditions.checkArgument(NODE_NAME_PART.matcher(name).matches(), "Invalid node name");
 
 		return nodes.computeIfAbsent(parent == InventoryNode.ROOT ? name : parent.getFullName() + "." + name, n -> {
 			InventoryNode created = new InventoryNode(parent, n);
@@ -73,6 +78,14 @@ public final class Locki implements ModInitializer {
 		return nodes.get(fullName);
 	}
 
+	public static Stream<Identifier> lockIds() {
+		return locks.keySet().stream();
+	}
+
+	public static Stream<String> nodeNames() {
+		return nodes.keySet().stream();
+	}
+
 	@VisibleForTesting
 	Function<PlayerEntity, InventoryKeeper> keeperFunction = InventoryKeeper::get;
 
@@ -80,6 +93,7 @@ public final class Locki implements ModInitializer {
 	public void onInitialize() {
 		DefaultInventoryNodes.init();
 
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> LockiCommand.register(dispatcher));
 		PermissionCheckEvent.EVENT.register((source, permission) -> {
 			if (source instanceof ServerCommandSource && permission.startsWith("locki.access.")) {
 				Entity entity = ((ServerCommandSource) source).getEntity();
