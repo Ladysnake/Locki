@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Set;
 
 public final class InventoryNode implements Comparable<InventoryNode> {
-    public static final InventoryNode ROOT = new InventoryNode(null, "locki");
+    public static final InventoryNode ROOT = new InventoryNode(null, "");
 
     private final @Nullable InventoryNode parent;
     private final Set<InventoryNode> allChildren = new ReferenceOpenHashSet<>();
