@@ -114,8 +114,8 @@ java {
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+	from("COPYING.LESSER") {
+		rename { "LICENSE_${project.archivesBaseName}"}
 	}
 }
 
