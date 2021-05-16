@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "locki",
+  "version": "${version}",
+
+  "name": "Locki",
+  "description": "A library to handle inventory locking",
+  "authors": [
+    "Pyrofab"
+  ],
+  "contact": {
+    "homepage": "https://ladysnake.github.io",
+    "sources": "https://github.com/Ladysnake/locki",
+    "issues": "https://github.com/Ladysnake/Locki/issues"
+  },
+
+  "license": "LGPL-3.0-or-later",
+  "icon": "assets/locki/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.ladysnake.locki.Locki"
+    ],
+    "cardinal-components": [
+      "io.github.ladysnake.locki.impl.LockiComponents"
+    ]
+  },
+  "mixins": [
+    {
+      "environment": "client",
+      "config": "locki.mixins.client.json"
+    },
+    {
+      "environment": "*",
+      "config": "locki.mixins.common.json"
+    }
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric-permissions-api-v0": "*",
+    "minecraft": "1.16.x"
+  },
+
+  "custom": {
+    "cardinal-components": [
+      "locki:inventory_keeper"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.ladysnake.locki.impl.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ArmorItemMixin",
+    "CraftingInventoryAccessor",
+    "CraftingResultSlotMixin",
+    "PlayerInventoryMixin",
+    "PlayerScreenHandlerAccessor",
+    "ScreenHandlerMixin",
+    "ServerPlayNetworkHandlerMixin",
+    "SlotMixin",
+    "UpdateSelectedSlotC2SPacketAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
