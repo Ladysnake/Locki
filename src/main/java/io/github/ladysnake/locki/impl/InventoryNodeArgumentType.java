@@ -68,7 +68,7 @@ public class InventoryNodeArgumentType implements ArgumentType<InventoryNode> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return CommandSource.suggestMatching(Locki.nodeNames(), builder);
+        return CommandSource.suggestMatching(Locki.streamNodeNames(), builder);
     }
 
     @Override

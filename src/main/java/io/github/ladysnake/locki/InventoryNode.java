@@ -18,34 +18,47 @@
 package io.github.ladysnake.locki;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * A tree node describing a set of one or more inventory slots.
+ */
 public final class InventoryNode implements Comparable<InventoryNode> {
     public static final InventoryNode ROOT = new InventoryNode(null, "");
 
     private final @Nullable InventoryNode parent;
-    private final Set<InventoryNode> allChildren = new ReferenceOpenHashSet<>();
-    private final Set<InventoryNode> unmodifiableAllChildren = Collections.unmodifiableSet(allChildren);
+    private final Set<InventoryNode> descendants = new ReferenceOpenHashSet<>();
+    private final Set<InventoryNode> unmodifiableDescendants = Collections.unmodifiableSet(descendants);
     private final String name;
 
+    @ApiStatus.Internal
     InventoryNode(@Nullable InventoryNode parent, String name) {
         this.parent = parent;
         this.name = name;
     }
 
-    void addChild(InventoryNode node) {
-        this.allChildren.add(node);
-        if (this.parent != null) this.parent.addChild(node);
+    @ApiStatus.Internal
+    void addDescendant(InventoryNode node) {
+        this.descendants.add(node);
+        if (this.parent != null) this.parent.addDescendant(node);
     }
 
-    public Set<InventoryNode> getAllChildren() {
-        return this.unmodifiableAllChildren;
+    /**
+     * @return a set describing all nodes that are directly or indirectly descending from this node
+     */
+    public Set<InventoryNode> getDescendants() {
+        return this.unmodifiableDescendants;
     }
 
+    /**
+     * @return a string describing this node and its ancestors in descending order, separated by dots ('.')
+     * @see Locki#getNode(String)
+     */
     public String getFullName() {
         return this.name;
     }

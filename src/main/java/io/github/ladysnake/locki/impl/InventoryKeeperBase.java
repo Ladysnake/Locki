@@ -17,20 +17,17 @@
  */
 package io.github.ladysnake.locki.impl;
 
-import com.google.common.annotations.VisibleForTesting;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import io.github.ladysnake.locki.InventoryKeeper;
 import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.Locki;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanMaps;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,7 +71,7 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     protected boolean updateLock(InventoryLock lock, InventoryNode invNode, boolean locking) {
         if (this.doUpdateLock(lock, invNode, locking)) {
             // drop all the child locks
-            for (InventoryNode subNode : invNode.getAllChildren()) {
+            for (InventoryNode subNode : invNode.getDescendants()) {
                 Reference2BooleanMap<InventoryLock> subLocks = this.getLocks().get(subNode);
                 if (subLocks != null) subLocks.removeBoolean(lock);
             }
@@ -93,7 +90,7 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
 
     protected void propagateChange(InventoryNode inventoryNode, InventoryLock lock, boolean locking) {
         this.lookup(inventoryNode).set(lock.getRawId(), locking);
-        for (InventoryNode child : inventoryNode.getAllChildren()) {
+        for (InventoryNode child : inventoryNode.getDescendants()) {
             this.lookup(child).set(lock.getRawId(), locking);
         }
     }

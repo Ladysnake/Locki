@@ -18,6 +18,7 @@
 package io.github.ladysnake.locki;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 
 public final class DefaultInventoryNodes {
@@ -42,6 +43,25 @@ public final class DefaultInventoryNodes {
     public static final ImmutableList<InventoryNode> ARMOR_SLOTS = ImmutableList.of(FEET, LEGS, CHEST, HEAD);
 
     public static final InventoryNode CRAFTING_GRID  = Locki.registerNode(INVENTORY, "crafting_grid");
+
+    public static InventoryNode get(EquipmentSlot equipmentSlot) {
+        switch (equipmentSlot) {
+            case MAINHAND:
+                return MAIN_HAND;
+            case OFFHAND:
+                return OFF_HAND;
+            case FEET:
+                return FEET;
+            case LEGS:
+                return LEGS;
+            case CHEST:
+                return CHEST;
+            case HEAD:
+                return HEAD;
+            default:
+                return INVENTORY;
+        }
+    }
 
     static void init() {
         // NO-OP
