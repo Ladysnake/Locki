@@ -22,6 +22,9 @@
     "main": [
       "io.github.ladysnake.locki.Locki"
     ],
+    "client": [
+      "io.github.ladysnake.locki.impl.LockiClient"
+    ],
     "cardinal-components": [
       "io.github.ladysnake.locki.impl.LockiComponents"
     ]

@@ -10,6 +10,13 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+sourceSets {
+	testmod {
+		compileClasspath += main.compileClasspath
+		runtimeClasspath += main.runtimeClasspath
+	}
+}
+
 repositories {
 	maven {
 		name = 'Ladysnake Mods'
@@ -23,6 +30,12 @@ repositories {
 		url = 'https://oss.sonatype.org/content/repositories/snapshots'
 		content {
 			includeGroup 'me.lucko'
+		}
+	}
+	maven {
+		url = 'https://maven.terraformersmc.com/releases'
+		content {
+			includeGroup 'com.terraformersmc'
 		}
 	}
 }
@@ -40,14 +53,15 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${cca_version}"
 	modImplementation ("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${cca_version}")
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${cca_version}"
-	modImplementation ("io.github.ladysnake:PlayerAbilityLib:${pal_version}")
-	include "io.github.ladysnake:PlayerAbilityLib:${pal_version}"
 	modImplementation "me.lucko:fabric-permissions-api:${fpa_version}"
 	include "me.lucko:fabric-permissions-api:${fpa_version}"
 
 	compileOnly "com.demonwav.mcdev:annotations:1.0"
+	modRuntime 'com.terraformersmc:modmenu:1.16.9'
 
 	testImplementation 'junit:junit:4.13'
+
+	testmodCompile sourceSets.main.output
 }
 
 test {

@@ -2,7 +2,6 @@ package io.github.ladysnake.locki.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import dev.onyxstudios.cca.api.v3.component.Component;
-import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryKeeper;
 import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.Locki;
@@ -16,10 +15,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.BitSet;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class InventoryKeeperBase implements Component, InventoryKeeper {
 
@@ -32,8 +28,13 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     }
 
     @Override
-    public boolean hasLock(InventoryLock lock, String invNode) {
-        return getLocks().getOrDefault(invNode, Reference2BooleanMaps.emptyMap()).containsKey(lock);
+    public boolean isLockedBy(InventoryLock lock, String invNode) {
+        return lookup(invNode).get(lock.getRawId());
+    }
+
+    @Override
+    public Set<InventoryLock> getAllPlacedLocks(String invNode) {
+        return getLocks().get(invNode).keySet();
     }
 
     @Override
@@ -51,14 +52,16 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
         throw new UnsupportedOperationException();
     }
 
-    private void updateLock(InventoryLock lock, String invNode, boolean locking) {
+    protected boolean updateLock(InventoryLock lock, String invNode, boolean locking) {
         if (this.doUpdateLock(lock, invNode, locking)) {
             // drop all the child locks
             for (Reference2BooleanMap<InventoryLock> subLocks : getSubTree(this.locks, invNode).values()) {
                 subLocks.removeBoolean(lock);
             }
             this.propagateChange(invNode, lock, locking);
+            return true;
         }
+        return false;
     }
 
     private boolean doUpdateLock(InventoryLock lock, String invNode, boolean locking) {
@@ -126,16 +129,14 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     static <T> NavigableMap<String, T> getSubTree(NavigableMap<String, T> nodeTree, String node) {
         String upperBound = node.substring(0, node.length() - 1) + (char) (node.charAt(node.length() - 1) + 1);
         return nodeTree.subMap(node, false, upperBound, false);
-    }
-
-    @Override
+    }@Override
     public void readFromNbt(CompoundTag tag) {
         if (tag.contains("locks", NbtType.COMPOUND)) {
             clearCache();
             getLocks().clear();
             CompoundTag dict = tag.getCompound("locks");
             for (String key : dict.getKeys()) {
-                for (Tag id : dict.getList(key, NbtType.STRING)) {
+                for (Tag id : dict.getList(key, NbtType.COMPOUND)) {
                     InventoryLock lock = Locki.getLock(Identifier.tryParse(id.asString()));
                     if (lock != null) {
                         this.addLock(lock, key);

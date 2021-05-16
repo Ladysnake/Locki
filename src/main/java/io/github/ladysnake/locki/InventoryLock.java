@@ -46,6 +46,29 @@ public final class InventoryLock {
         InventoryKeeper.get(player).removeLock(this, invNode);
     }
 
+    /**
+     * @return {@code true} if this lock is actively locking or keeping unlocked {@code invNode}
+     */
+    public boolean isPlacedOn(PlayerEntity player, String invNode) {
+        return InventoryKeeper.get(player).getAllPlacedLocks(invNode).contains(this);
+    }
+
+    /**
+     * @return {@code true} if this lock is locking the specified {@code invNode} or one of its parents
+     */
+    public boolean isLocking(PlayerEntity player, String invNode) {
+        return InventoryKeeper.get(player).isLockedBy(this, invNode);
+    }
+
+    public void toggle(PlayerEntity player, String invNode) {
+        InventoryKeeper keeper = InventoryKeeper.get(player);
+        if (keeper.isLockedBy(this, invNode)) {
+            keeper.removeLock(this, invNode);
+        } else {
+            keeper.addLock(this, invNode);
+        }
+    }
+
     @Override
     public String toString() {
         return this.id.toString();

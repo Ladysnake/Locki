@@ -28,7 +28,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
 
     @Override
     protected NavigableMap<String, Reference2BooleanMap<InventoryLock>> getLocks() {
-        Preconditions.checkState(!this.player.world.isClient, "Locks can only be accessed serverside (check !world.isClient)");
+        Preconditions.checkState(!this.player.world.isClient, "Locks can only be managed serverside (check !world.isClient)");
         return super.getLocks();
     }
 
@@ -72,5 +72,14 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
         }
 
         return this.isLocked(DefaultInventoryNodes.HANDS) && (index < 9 || index == OFFHAND_SLOT);
+    }
+
+    @Override
+    protected boolean updateLock(InventoryLock lock, String invNode, boolean locking) {
+        if (super.updateLock(lock, invNode, locking)) {
+            LockiComponents.INVENTORY_KEEPER.sync(this.player);
+            return true;
+        }
+        return false;
     }
 }

@@ -3,6 +3,8 @@ package io.github.ladysnake.locki;
 import io.github.ladysnake.locki.impl.LockiComponents;
 import net.minecraft.entity.player.PlayerEntity;
 
+import java.util.Set;
+
 public interface InventoryKeeper {
     static InventoryKeeper get(PlayerEntity player) {
         return LockiComponents.INVENTORY_KEEPER.get(player);
@@ -10,7 +12,7 @@ public interface InventoryKeeper {
 
     boolean isLocked(String invNode);
 
-    boolean hasLock(InventoryLock lock, String invNode);
+    boolean isLockedBy(InventoryLock lock, String invNode);
 
     void addLock(InventoryLock lock, String invNode);
 
@@ -22,4 +24,6 @@ public interface InventoryKeeper {
     void forceRefresh();
 
     boolean isSlotLocked(int slot);
+
+    Set<InventoryLock> getAllPlacedLocks(String invNode);
 }
