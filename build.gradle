@@ -141,7 +141,7 @@ license {
 	//export variables
 	ext {
 		year = Year.now()
-		projectDisplayName = project.name
+		projectDisplayName = project.display_name
 		projectOwners = rootProject.owners
 		if (project.license_header.contains('GPL')) {
 			if (!project.hasProperty("gpl_version")) {

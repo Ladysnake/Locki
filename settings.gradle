@@ -8,4 +8,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'Locki'
+rootProject.name = 'locki'
