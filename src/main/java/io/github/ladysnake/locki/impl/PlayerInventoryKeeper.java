@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryLock;
+import io.github.ladysnake.locki.InventoryNode;
+import io.github.ladysnake.locki.Locki;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -11,7 +13,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.BitSet;
 import java.util.Map;
-import java.util.NavigableMap;
 
 public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSyncedComponent {
     public static final int MAINHAND_SLOT = 0;
@@ -27,7 +28,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     }
 
     @Override
-    protected NavigableMap<String, Reference2BooleanMap<InventoryLock>> getLocks() {
+    protected Map<InventoryNode, Reference2BooleanMap<InventoryLock>> getLocks() {
         Preconditions.checkState(!this.player.world.isClient, "Locks can only be managed serverside (check !world.isClient)");
         return super.getLocks();
     }
@@ -40,8 +41,9 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     @Override
     public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
         buf.writeVarInt(this.cache.size());
-        for (Map.Entry<String, BitSet> entry : this.getCache().entrySet()) {
-            buf.writeString(entry.getKey());
+        for (Map.Entry<InventoryNode, BitSet> entry : this.getCache().entrySet()) {
+            // Could compress this by
+            buf.writeString(entry.getKey().getFullName());
             buf.writeBoolean(!entry.getValue().isEmpty());
         }
     }
@@ -53,7 +55,12 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
         for (int i = 0; i < size; i++) {
             String key = buf.readString();
             boolean locked = buf.readBoolean();
-            this.getCache().computeIfAbsent(key, s -> new BitSet()).set(CLIENT_LOCK, locked);
+            InventoryNode node = Locki.getNode(key);
+            if (node == null) {
+                Locki.LOGGER.error("Received unknown inventory node path during sync: {}", key);
+            } else {
+                this.getCache().computeIfAbsent(node, s -> new BitSet()).set(CLIENT_LOCK, locked);
+            }
         }
     }
 
@@ -75,7 +82,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     }
 
     @Override
-    protected boolean updateLock(InventoryLock lock, String invNode, boolean locking) {
+    protected boolean updateLock(InventoryLock lock, InventoryNode invNode, boolean locking) {
         if (super.updateLock(lock, invNode, locking)) {
             LockiComponents.INVENTORY_KEEPER.sync(this.player);
             return true;

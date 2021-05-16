@@ -60,12 +60,4 @@ public class InventoryKeeperBaseTest {
         instance.forceRefresh();
         System.out.println("After: " + instance.getCache());
     }
-
-    @Test
-    public void getSubTree() {
-        NavigableMap<String, Unit> map = Stream.of(
-                "a", "ab", "aaaa", "az", "b"
-        ).collect(Collectors.toMap(Function.identity(), s -> Unit.INSTANCE, (u, u2) -> u, TreeMap::new));
-        assertEquals(ImmutableSet.of("ab", "aaaa", "az"), InventoryKeeperBase.getSubTree(map, "a").keySet());
-    }
 }

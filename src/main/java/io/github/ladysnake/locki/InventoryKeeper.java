@@ -10,13 +10,13 @@ public interface InventoryKeeper {
         return LockiComponents.INVENTORY_KEEPER.get(player);
     }
 
-    boolean isLocked(String invNode);
+    boolean isLocked(InventoryNode invNode);
 
-    boolean isLockedBy(InventoryLock lock, String invNode);
+    boolean isLockedBy(InventoryLock lock, InventoryNode invNode);
 
-    void addLock(InventoryLock lock, String invNode);
+    void addLock(InventoryLock lock, InventoryNode invNode);
 
-    void removeLock(InventoryLock lock, String invNode);
+    void removeLock(InventoryLock lock, InventoryNode invNode);
 
     /**
      * Rebuilds the lock cache
@@ -25,5 +25,5 @@ public interface InventoryKeeper {
 
     boolean isSlotLocked(int slot);
 
-    Set<InventoryLock> getAllPlacedLocks(String invNode);
+    Set<InventoryLock> getAllPlacedLocks(InventoryNode invNode);
 }

@@ -2,6 +2,7 @@ package io.github.ladysnake.lockii;
 
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryLock;
+import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.Locki;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 
 public class InventoryLockItem extends Item {
     public static final InventoryLock LOCK = Locki.registerLock(Lockii.id("test_item"));
-    private static final String[] ALL_DEFAULT_NODES = new String[] {
+    private static final InventoryNode[] ALL_DEFAULT_NODES = new InventoryNode[]{
             DefaultInventoryNodes.INVENTORY,
             DefaultInventoryNodes.MAIN_INVENTORY,
             DefaultInventoryNodes.HANDS,
