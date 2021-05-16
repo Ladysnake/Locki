@@ -71,7 +71,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
             return true;
         }
 
-        return this.isLocked(DefaultInventoryNodes.HANDS) && (index < 9 || index == OFFHAND_SLOT);
+        return (index < 9 && this.isLocked(DefaultInventoryNodes.MAIN_HAND)) || (index == OFFHAND_SLOT && this.isLocked(DefaultInventoryNodes.OFF_HAND));
     }
 
     @Override

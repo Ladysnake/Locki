@@ -44,10 +44,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // Lower priority to load before Bedrockify's mixin, fix for issue Ladysnake/Requiem#198
@@ -77,6 +74,14 @@ public abstract class InGameHudMixin {
         } else {
             this.renderMainHandOnly = inventoryKeeper.isLocked(DefaultInventoryNodes.MAIN_INVENTORY);
         }
+    }
+
+    @ModifyVariable(method = "renderHotbar", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerEntity;getOffHandStack()Lnet/minecraft/item/ItemStack;"))
+    private ItemStack lockOffHand(ItemStack base) {
+        if (InventoryKeeper.get(this.getCameraPlayer()).isLocked(DefaultInventoryNodes.OFF_HAND)) {
+            return ItemStack.EMPTY;
+        }
+        return base;
     }
 
     @ModifyArg(
