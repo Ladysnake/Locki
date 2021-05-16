@@ -18,6 +18,7 @@
 package io.github.ladysnake.locki.impl;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryLock;
@@ -89,10 +90,13 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
             return true;
         }
 
-        int armorSize = player.inventory.armor.size();
+        int armorIndex = index - mainSize;
+        ImmutableList<InventoryNode> armorSlots = DefaultInventoryNodes.ARMOR_SLOTS;
 
-        if (this.isLocked(DefaultInventoryNodes.ARMOR) && index >= mainSize && index < mainSize + armorSize) {
-            return true;
+        if (armorIndex >= 0 && armorIndex < armorSlots.size()) {
+            if (this.isLocked(armorSlots.get(armorIndex))) {
+                return true;
+            }
         }
 
         return (index < 9 && this.isLocked(DefaultInventoryNodes.MAIN_HAND)) || (index == OFFHAND_SLOT && this.isLocked(DefaultInventoryNodes.OFF_HAND));

@@ -17,6 +17,7 @@
  */
 package io.github.ladysnake.locki;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.player.PlayerInventory;
 
 public final class DefaultInventoryNodes {
@@ -34,6 +35,11 @@ public final class DefaultInventoryNodes {
     public static final InventoryNode OFF_HAND       = Locki.registerNode(HANDS, "off_hand");
 
     public static final InventoryNode ARMOR          = Locki.registerNode(INVENTORY, "armor");
+    public static final InventoryNode FEET           = Locki.registerNode(ARMOR, "feet");
+    public static final InventoryNode LEGS           = Locki.registerNode(ARMOR, "legs");
+    public static final InventoryNode CHEST          = Locki.registerNode(ARMOR, "chest");
+    public static final InventoryNode HEAD           = Locki.registerNode(ARMOR, "head");
+    public static final ImmutableList<InventoryNode> ARMOR_SLOTS = ImmutableList.of(FEET, LEGS, CHEST, HEAD);
 
     public static final InventoryNode CRAFTING_GRID  = Locki.registerNode(INVENTORY, "crafting_grid");
 

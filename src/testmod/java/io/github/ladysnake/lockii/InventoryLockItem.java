@@ -22,6 +22,10 @@ public class InventoryLockItem extends Item {
             DefaultInventoryNodes.MAIN_HAND,
             DefaultInventoryNodes.OFF_HAND,
             DefaultInventoryNodes.ARMOR,
+            DefaultInventoryNodes.FEET,
+            DefaultInventoryNodes.LEGS,
+            DefaultInventoryNodes.CHEST,
+            DefaultInventoryNodes.HEAD,
             DefaultInventoryNodes.CRAFTING_GRID
     };
 
