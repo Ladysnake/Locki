@@ -1,11 +1,4 @@
 ------------------------------------------------------
 Version 0.1.0
 ------------------------------------------------------
-Additions
-- None
-
-Changes
-- None
-
-Bug Fixes
-- None
+*First release of Locki, split from Requiem 1.7.6*
