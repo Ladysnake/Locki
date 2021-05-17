@@ -20,10 +20,14 @@ package io.github.ladysnake.locki;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import io.github.ladysnake.locki.impl.LockiCommand;
+import io.github.ladysnake.locki.impl.InventoryLockArgumentType;
+import io.github.ladysnake.locki.impl.InventoryNodeArgumentType;
 import me.lucko.fabric.api.permissions.v0.PermissionCheckEvent;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.util.TriState;
+import net.minecraft.command.argument.ArgumentTypes;
+import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
@@ -132,6 +136,8 @@ public final class Locki implements ModInitializer {
     public void onInitialize() {
         DefaultInventoryNodes.init();
 
+        ArgumentTypes.register("locki:inventory_lock", InventoryLockArgumentType.class, new ConstantArgumentSerializer<>(InventoryLockArgumentType::inventoryLock));
+        ArgumentTypes.register("locki:inventory_node", InventoryNodeArgumentType.class, new ConstantArgumentSerializer<>(InventoryNodeArgumentType::inventoryNode));
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> LockiCommand.register(dispatcher));
         PermissionCheckEvent.EVENT.register((source, permission) -> {
             if (source instanceof ServerCommandSource && permission.startsWith("locki.access.")) {
