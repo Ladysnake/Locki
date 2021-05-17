@@ -44,27 +44,26 @@ public abstract class SlotMixin implements LockableSlot {
     @Shadow
     @Final
     private int index;
-    @Unique
-    protected @Nullable InventoryKeeper limiter;
-    @Unique
-    protected boolean craftingSlot;
+
+    protected @Nullable InventoryKeeper locki$keeper;
+    protected boolean locki$craftingSlot;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void constructor(Inventory inventory, int index, int x, int y, CallbackInfo ci) {
         if (inventory instanceof PlayerInventory) {
-            this.limiter = LockiComponents.INVENTORY_KEEPER.maybeGet(((PlayerInventory) inventory).player).orElse(null);
+            this.locki$keeper = LockiComponents.INVENTORY_KEEPER.maybeGet(((PlayerInventory) inventory).player).orElse(null);
         } else if (inventory instanceof CraftingInventory) {
             ScreenHandler handler = ((CraftingInventoryAccessor) inventory).locki$getHandler();
             if (handler instanceof PlayerScreenHandlerAccessor) {
-                this.limiter = LockiComponents.INVENTORY_KEEPER.maybeGet(((PlayerScreenHandlerAccessor) handler).getOwner()).orElse(null);
-                this.craftingSlot = true;
+                this.locki$keeper = LockiComponents.INVENTORY_KEEPER.maybeGet(((PlayerScreenHandlerAccessor) handler).getOwner()).orElse(null);
+                this.locki$craftingSlot = true;
             }
         }
     }
 
     @Override
     public boolean locki$shouldBeLocked() {
-        return this.limiter != null && (this.craftingSlot ? this.limiter.isLocked(DefaultInventoryNodes.CRAFTING_GRID) : this.limiter.isSlotLocked(this.index));
+        return this.locki$keeper != null && (this.locki$craftingSlot ? this.locki$keeper.isLocked(DefaultInventoryNodes.CRAFTING_GRID) : this.locki$keeper.isSlotLocked(this.index));
     }
 
     @Inject(method = "canInsert", at = @At("HEAD"), cancellable = true)
