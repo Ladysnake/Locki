@@ -94,6 +94,12 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     }
 
     @Override
+    public boolean isLocked(InventoryNode invNode) {
+        if (this.player.isCreative()) return false;
+        return super.isLocked(invNode);
+    }
+
+    @Override
     public boolean isSlotLocked(int index) {
         int mainSize = player.inventory.main.size();
 
