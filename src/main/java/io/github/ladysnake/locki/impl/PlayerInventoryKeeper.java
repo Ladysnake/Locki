@@ -92,7 +92,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
                 BitSet value = BitSet.valueOf(locked);
                 BitSet old = this.cache.put(node, value);
                 if ((old == null || old.isEmpty()) != value.isEmpty()) {
-                    InventoryLockingChangeCallback.EVENT.invoker().onInventoryLockingChange(this.player, node, !value.isEmpty());
+                    InventoryLockingChangeCallback.EVENT.invoker().onLockingStateChanged(this.player, node, !value.isEmpty());
                 }
             }
         }
@@ -144,7 +144,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     @Override
     protected boolean updateCachedLockState(InventoryLock lock, boolean locking, InventoryNode invNode) {
         if (super.updateCachedLockState(lock, locking, invNode)) {
-            InventoryLockingChangeCallback.EVENT.invoker().onInventoryLockingChange(this.player, invNode, locking);
+            InventoryLockingChangeCallback.EVENT.invoker().onLockingStateChanged(this.player, invNode, locking);
             return true;
         }
         return false;

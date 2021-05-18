@@ -23,12 +23,12 @@ import net.minecraft.entity.player.PlayerEntity;
 
 @FunctionalInterface
 public interface InventoryLockingChangeCallback {
-    void onInventoryLockingChange(PlayerEntity player, InventoryNode invNode, boolean locked);
+    void onLockingStateChanged(PlayerEntity player, InventoryNode invNode, boolean locked);
 
     Event<InventoryLockingChangeCallback> EVENT = EventFactory.createArrayBacked(InventoryLockingChangeCallback.class,
         (callbacks) -> (player, part, locked) -> {
             for (InventoryLockingChangeCallback callback : callbacks) {
-                callback.onInventoryLockingChange(player, part, locked);
+                callback.onLockingStateChanged(player, part, locked);
             }
         });
 }
