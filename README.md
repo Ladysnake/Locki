@@ -1,4 +1,7 @@
 # Locki
+
+![Example](res/demo.png)
+
 A library handling player inventory locking. Can also be used as a standalone mod, through the `/locki` command.
 
 This mod must be installed on both server and client to work properly.
