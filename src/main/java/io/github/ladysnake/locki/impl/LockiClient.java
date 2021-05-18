@@ -17,18 +17,53 @@
  */
 package io.github.ladysnake.locki.impl;
 
+import io.github.ladysnake.locki.DefaultInventoryNodes;
+import io.github.ladysnake.locki.InventoryLockingChangeCallback;
+import io.github.ladysnake.locki.InventoryNode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
 public class LockiClient implements ClientModInitializer {
     public static final Identifier LOCKED_SLOT_SPRITE = new Identifier("locki", "gui/locked_slot");
 
+    private static void updateCraftingBookVisibility(PlayerEntity player, InventoryNode invNode, boolean locked) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+
+        if (player == mc.player) {
+            if (invNode == DefaultInventoryNodes.CRAFTING_GRID) {
+                if (mc.currentScreen instanceof InventoryScreenAccessor) {
+                    ((InventoryScreenAccessor) mc.currentScreen).locki$getRecipeBookButton().visible = !locked;
+                }
+            } else if (invNode == DefaultInventoryNodes.CRAFTING_BOOK && locked) {
+                if (mc.currentScreen instanceof InventoryScreen) {
+                    RecipeBookWidget recipeBookWidget = ((RecipeBookProvider) mc.currentScreen).getRecipeBookWidget();
+                    if (recipeBookWidget.isOpen()) {
+                        recipeBookWidget.toggleOpen();
+                    }
+                } else if (!(mc.currentScreen instanceof RecipeBookProvider)) {
+                    assert mc.player != null;
+                    mc.player.getRecipeBook().setGuiOpen(RecipeBookCategory.CRAFTING, false);
+                }
+            }
+        }
+    }
+
+    private static void registerSprites(SpriteAtlasTexture spriteAtlasTexture, ClientSpriteRegistryCallback.Registry registry) {
+        registry.register(LOCKED_SLOT_SPRITE);
+    }
+
     @Override
     public void onInitializeClient() {
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) ->
-                registry.register(LOCKED_SLOT_SPRITE)
-        );
+        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(LockiClient::registerSprites);
+        InventoryLockingChangeCallback.EVENT.register(LockiClient::updateCraftingBookVisibility);
     }
 }

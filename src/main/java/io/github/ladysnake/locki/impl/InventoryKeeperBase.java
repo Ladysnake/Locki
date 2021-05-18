@@ -47,6 +47,19 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     }
 
     @Override
+    public boolean isEntirelyLocked(InventoryNode invNode) {
+        if (!this.isLocked(invNode)) return false;
+
+        for (InventoryNode descendant : invNode.getDescendants()) {
+            if (!this.isLocked(descendant)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean isLockedBy(InventoryLock lock, InventoryNode invNode) {
         return lookup(invNode).get(lock.getRawId());
     }
@@ -100,20 +113,6 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
             return true;
         }
         return false;
-    }
-
-    private boolean doUpdateLock(InventoryLock lock, InventoryNode invNode, boolean locking) {
-        Reference2BooleanMap<InventoryLock> lockSet = this.getLocks().computeIfAbsent(invNode, n -> new Reference2BooleanOpenHashMap<>());
-        @SuppressWarnings("deprecation")    // using the deprecated overload on purpose to check former presence
-        @Nullable Boolean previous = lockSet.put(lock, (Boolean) locking);
-        return previous == null || previous != locking;
-    }
-
-    protected void propagateChange(InventoryNode inventoryNode, InventoryLock lock, boolean locking) {
-        this.lookup(inventoryNode).set(lock.getRawId(), locking);
-        for (InventoryNode child : inventoryNode.getDescendants()) {
-            this.lookup(child).set(lock.getRawId(), locking);
-        }
     }
 
     @Override

@@ -50,7 +50,9 @@ public final class DefaultInventoryNodes {
     public static final InventoryNode HEAD           = Locki.registerNode(ARMOR, "head");
     public static final ImmutableList<InventoryNode> ARMOR_SLOTS = ImmutableList.of(FEET, LEGS, CHEST, HEAD);
 
-    public static final InventoryNode CRAFTING_GRID  = Locki.registerNode(INVENTORY, "crafting_grid");
+    public static final InventoryNode CRAFTING       = Locki.registerNode(INVENTORY, "crafting");
+    public static final InventoryNode CRAFTING_GRID  = Locki.registerNode(CRAFTING, "grid");
+    public static final InventoryNode CRAFTING_BOOK  = Locki.registerNode(CRAFTING, "book");
 
     public static InventoryNode get(EquipmentSlot equipmentSlot) {
         switch (equipmentSlot) {
