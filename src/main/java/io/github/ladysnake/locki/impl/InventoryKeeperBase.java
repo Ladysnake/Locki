@@ -127,7 +127,8 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
             clearCache();
             getLocks().clear();
             CompoundTag dict = tag.getCompound("locks");
-            for (String key : dict.getKeys()) {
+            // need to order the keys to avoid overwriting entries as we go
+            for (String key : new TreeSet<>(dict.getKeys())) {
                 InventoryNode node = Locki.getNode(key);
                 if (node != null) {
                     ListTag list = dict.getList(key, NbtType.COMPOUND);
