@@ -23,6 +23,7 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryKeeper;
 import io.github.ladysnake.locki.InventoryLock;
+import io.github.ladysnake.locki.InventoryLockingChangeCallback;
 import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.Locki;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
@@ -71,9 +72,9 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
         buf.writeVarInt(this.cache.size());
         for (Map.Entry<InventoryNode, BitSet> entry : this.getCache().entrySet()) {
-            // Could compress this by
+            // Could compress this by not repeating ancestors?
             buf.writeString(entry.getKey().getFullName());
-            buf.writeBoolean(!entry.getValue().isEmpty());
+            buf.writeByteArray(entry.getValue().toByteArray());
         }
     }
 
@@ -83,12 +84,16 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
         this.clearCache();
         for (int i = 0; i < size; i++) {
             String key = buf.readString();
-            boolean locked = buf.readBoolean();
+            byte[] locked = buf.readByteArray();
             InventoryNode node = Locki.getNode(key);
             if (node == null) {
                 Locki.LOGGER.error("Received unknown inventory node path during sync: {}", key);
             } else {
-                this.getCache().computeIfAbsent(node, s -> new BitSet()).set(CLIENT_LOCK, locked);
+                BitSet value = BitSet.valueOf(locked);
+                BitSet old = this.cache.put(node, value);
+                if ((old == null || old.isEmpty()) != value.isEmpty()) {
+                    InventoryLockingChangeCallback.EVENT.invoker().onInventoryLockingChange(this.player, node, !value.isEmpty());
+                }
             }
         }
     }
@@ -128,9 +133,18 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     }
 
     @Override
-    protected boolean updateLock(InventoryLock lock, InventoryNode invNode, boolean locking) {
-        if (super.updateLock(lock, invNode, locking)) {
+    protected boolean propagateChange(InventoryNode invNode, InventoryLock lock, boolean locking) {
+        if (super.propagateChange(invNode, lock, locking)) {
             LockiComponents.INVENTORY_KEEPER.sync(this.player);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean updateCachedLockState(InventoryLock lock, boolean locking, InventoryNode invNode) {
+        if (super.updateCachedLockState(lock, locking, invNode)) {
+            InventoryLockingChangeCallback.EVENT.invoker().onInventoryLockingChange(this.player, invNode, locking);
             return true;
         }
         return false;

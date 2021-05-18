@@ -29,9 +29,12 @@ import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class InventoryKeeperBase implements Component, InventoryKeeper {
 
@@ -68,14 +71,32 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
         throw new UnsupportedOperationException();
     }
 
-    protected boolean updateLock(InventoryLock lock, InventoryNode invNode, boolean locking) {
-        if (this.doUpdateLock(lock, invNode, locking)) {
-            // drop all the child locks
-            for (InventoryNode subNode : invNode.getDescendants()) {
-                Reference2BooleanMap<InventoryLock> subLocks = this.getLocks().get(subNode);
-                if (subLocks != null) subLocks.removeBoolean(lock);
-            }
-            this.propagateChange(invNode, lock, locking);
+    protected void updateLock(InventoryLock lock, InventoryNode invNode, boolean locking) {
+        this.doUpdateLock(lock, invNode, locking);
+        // drop all the child locks
+        for (InventoryNode subNode : invNode.getDescendants()) {
+            Reference2BooleanMap<InventoryLock> subLocks = this.getLocks().get(subNode);
+            if (subLocks != null) subLocks.removeBoolean(lock);
+        }
+        this.propagateChange(invNode, lock, locking);
+    }
+
+    private void doUpdateLock(InventoryLock lock, InventoryNode invNode, boolean locking) {
+        this.getLocks().computeIfAbsent(invNode, n -> new Reference2BooleanOpenHashMap<>()).put(lock, locking);
+    }
+
+    protected boolean propagateChange(InventoryNode inventoryNode, InventoryLock lock, boolean locking) {
+        boolean changed = this.updateCachedLockState(lock, locking, inventoryNode);
+        for (InventoryNode child : inventoryNode.getDescendants()) {
+            changed |= this.updateCachedLockState(lock, locking, child);
+        }
+        return changed;
+    }
+
+    protected boolean updateCachedLockState(InventoryLock lock, boolean locking, InventoryNode inventoryNode) {
+        BitSet bitset = this.lookup(inventoryNode);
+        if (bitset.get(lock.getRawId()) != locking) {
+            bitset.set(lock.getRawId(), locking);
             return true;
         }
         return false;
