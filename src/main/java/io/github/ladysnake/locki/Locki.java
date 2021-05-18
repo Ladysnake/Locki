@@ -19,9 +19,9 @@ package io.github.ladysnake.locki;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import io.github.ladysnake.locki.impl.LockiCommand;
 import io.github.ladysnake.locki.impl.InventoryLockArgumentType;
 import io.github.ladysnake.locki.impl.InventoryNodeArgumentType;
+import io.github.ladysnake.locki.impl.LockiCommand;
 import me.lucko.fabric.api.permissions.v0.PermissionCheckEvent;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -58,73 +58,73 @@ public final class Locki implements ModInitializer {
     private static int nextId;
 
     /**
-	 * Registers an {@link InventoryLock} if it does not already exist.
-	 *
+     * Registers an {@link InventoryLock} if it does not already exist.
+     *
      * @param id a unique identifier for the created lock
-	 * @return the (created or previously registered) lock
+     * @return the (created or previously registered) lock
      */
     public static synchronized InventoryLock registerLock(Identifier id) {
         Preconditions.checkNotNull(id);
         return locks.computeIfAbsent(id, id1 -> new InventoryLock(id1, nextId++));
     }
 
-	/**
-	 * Gets a previously registered {@link InventoryLock}.
-	 *
-	 * @param id the identifier with which the desired lock was registered
-	 * @return the previously registered lock, or {@code null}
-	 */
-	@Contract(value = "null -> null; !null -> _", pure = true)
+    /**
+     * Gets a previously registered {@link InventoryLock}.
+     *
+     * @param id the identifier with which the desired lock was registered
+     * @return the previously registered lock, or {@code null}
+     */
+    @Contract(value = "null -> null; !null -> _", pure = true)
     public static @Nullable InventoryLock getLock(@Nullable Identifier id) {
         return locks.get(id);
     }
 
-	/**
-	 * Registers an {@link InventoryNode} if it does not already exist.
-	 *
-	 * <p>The passed in {@code name} will be appended to the parent's {@linkplain InventoryNode#getFullName() full name}
-	 * to form the new node's full name.
-	 *
-	 * @param parent the parent of the registered node
-	 * @param name the last part of the new node's name
-	 * @return the (created or previously registered) inventory node
-	 * @see DefaultInventoryNodes
-	 */
+    /**
+     * Registers an {@link InventoryNode} if it does not already exist.
+     *
+     * <p>The passed in {@code name} will be appended to the parent's {@linkplain InventoryNode#getFullName() full name}
+     * to form the new node's full name.
+     *
+     * @param parent the parent of the registered node
+     * @param name   the last part of the new node's name
+     * @return the (created or previously registered) inventory node
+     * @see DefaultInventoryNodes
+     */
     public static synchronized InventoryNode registerNode(InventoryNode parent, String name) {
         Preconditions.checkNotNull(parent);
         Preconditions.checkNotNull(name);
         Preconditions.checkArgument(NODE_NAME_PART.matcher(name).matches(), "Invalid node name");
 
-		String fullName = parent == InventoryNode.ROOT ? name : parent.getFullName() + "." + name;
+        String fullName = parent == InventoryNode.ROOT ? name : parent.getFullName() + "." + name;
 
-		return nodes.computeIfAbsent(fullName, n -> {
+        return nodes.computeIfAbsent(fullName, n -> {
             InventoryNode created = new InventoryNode(parent, n);
             parent.addDescendant(created);
             return created;
         });
     }
 
-	/**
-	 * Gets a previously registered {@link InventoryLock}.
-	 *
-	 * @param fullName the full path describing the node and its ancestors, as returned by {@link InventoryNode#getFullName()}
-	 * @return the previously registered inventory node, or {@code null}
-	 */
+    /**
+     * Gets a previously registered {@link InventoryLock}.
+     *
+     * @param fullName the full path describing the node and its ancestors, as returned by {@link InventoryNode#getFullName()}
+     * @return the previously registered inventory node, or {@code null}
+     */
     @Contract(value = "null -> null; !null -> _", pure = true)
     public static @Nullable InventoryNode getNode(@Nullable String fullName) {
         return nodes.get(fullName);
     }
 
-	/**
-	 * @return a stream describing all identifiers that have been used to register locks up until this method is called
-	 */
-	public static Stream<Identifier> streamLockIds() {
+    /**
+     * @return a stream describing all identifiers that have been used to register locks up until this method is called
+     */
+    public static Stream<Identifier> streamLockIds() {
         return locks.keySet().stream();
     }
 
-	/**
-	 * @return a stream describing the full names of all nodes that have been registered up until this method is called
-	 */
+    /**
+     * @return a stream describing the full names of all nodes that have been registered up until this method is called
+     */
     public static Stream<String> streamNodeNames() {
         return nodes.keySet().stream();
     }

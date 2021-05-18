@@ -32,7 +32,11 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -43,6 +47,7 @@ public abstract class PlayerInventoryMixin {
 
     @Shadow
     @Final
+    @Nullable
     public PlayerEntity player;
 
     @Shadow
@@ -62,8 +67,8 @@ public abstract class PlayerInventoryMixin {
         at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/entity/player/PlayerInventory;selectedSlot:I", shift = At.Shift.AFTER)
     )
     private void preventClientHotbarSelection(CallbackInfo ci) {
-        if (this.locki$keeper != null && this.locki$keeper.isSlotLocked(this.selectedSlot)) {
-            this.selectedSlot = PlayerInventoryKeeper.MAINHAND_SLOT;
+        if (this.player != null) {
+            this.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(this.player, this.selectedSlot);
         }
     }
 
@@ -71,8 +76,15 @@ public abstract class PlayerInventoryMixin {
         at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/entity/player/PlayerInventory;selectedSlot:I", shift = At.Shift.AFTER)
     )
     private void preventHotbarSelection(CallbackInfo ci) {
-        if (this.locki$keeper != null && this.locki$keeper.isSlotLocked(this.selectedSlot)) {
-            this.selectedSlot = PlayerInventoryKeeper.MAINHAND_SLOT;
+        if (this.player != null) {
+            this.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(player, this.selectedSlot);
+        }
+    }
+
+    @Inject(method = "swapSlotWithHotbar", at = @At("HEAD"), cancellable = true)
+    private void preventHotbarSwap(int hotbarSlot, CallbackInfo ci) {
+        if (this.locki$keeper != null && this.locki$keeper.isLocked(DefaultInventoryNodes.MAIN_HAND)) {
+            ci.cancel();
         }
     }
 

@@ -28,7 +28,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayNetworkHandler.class)
@@ -38,14 +37,14 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @Inject(method = "onUpdateSelectedSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/c2s/play/UpdateSelectedSlotC2SPacket;getSelectedSlot()I", ordinal = 0))
     private void fixSelectedSlot(UpdateSelectedSlotC2SPacket packet, CallbackInfo ci) {
-        if (InventoryKeeper.get(this.player).isSlotLocked(packet.getSelectedSlot())) {
-            ((UpdateSelectedSlotC2SPacketAccessor) packet).locki$setSelectedSlot(PlayerInventoryKeeper.MAINHAND_SLOT);
-        }
+        ((UpdateSelectedSlotC2SPacketAccessor) packet).locki$setSelectedSlot(PlayerInventoryKeeper.fixSelectedSlot(player, packet.getSelectedSlot()));
     }
 
     @Inject(method = "onPlayerAction", at = @At(value = "FIELD", target = "Lnet/minecraft/util/Hand;OFF_HAND:Lnet/minecraft/util/Hand;", ordinal = 0), cancellable = true)
     private void preventSwap(PlayerActionC2SPacket packet, CallbackInfo ci) {
-        if (InventoryKeeper.get(this.player).isLocked(DefaultInventoryNodes.OFF_HAND)) {
+        InventoryKeeper inventoryKeeper = InventoryKeeper.get(this.player);
+        if (inventoryKeeper.isLocked(DefaultInventoryNodes.OFF_HAND)
+                || inventoryKeeper.isLocked(DefaultInventoryNodes.MAIN_HAND)) {
             ci.cancel();
         }
     }

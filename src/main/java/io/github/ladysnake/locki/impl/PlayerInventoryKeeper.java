@@ -21,11 +21,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
+import io.github.ladysnake.locki.InventoryKeeper;
 import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.Locki;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -36,8 +38,17 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     public static final int MAINHAND_SLOT = 0;
     public static final int OFFHAND_SLOT = 40;
 
-    /**A lock id that is used clientside when a slot is locked by the server*/
-    private static final int CLIENT_LOCK = 0;
+    public static int fixSelectedSlot(PlayerEntity player, int selectedSlot) {
+        InventoryKeeper inventoryKeeper = InventoryKeeper.get(player);
+        if (inventoryKeeper.isLocked(DefaultInventoryNodes.MAIN_HAND)) {
+            return PlayerInventoryKeeper.MAINHAND_SLOT;
+        } else {
+            while (inventoryKeeper.isSlotLocked(selectedSlot)) {
+                selectedSlot = (selectedSlot + 1) % PlayerInventory.getHotbarSize();
+            }
+            return selectedSlot;
+        }
+    }
 
     private final PlayerEntity player;
 

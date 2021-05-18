@@ -58,8 +58,8 @@ public abstract class ScreenHandlerMixin {
 
     @ModifyVariable(method = "insertItem", at = @At("LOAD"), ordinal = 2)
     private int skipLockedSlots(int checkedSlot, ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
-        if (((LockableSlot) this.slots.get(checkedSlot)).locki$shouldBeLocked()) {
-            return fromLast ? checkedSlot - 1 : checkedSlot + 1;
+        while (checkedSlot >= startIndex && checkedSlot < endIndex && ((LockableSlot) this.slots.get(checkedSlot)).locki$shouldBeLocked()) {
+            checkedSlot = fromLast ? checkedSlot - 1 : checkedSlot + 1;
         }
 
         return checkedSlot;

@@ -17,7 +17,6 @@
  */
 package io.github.ladysnake.locki.impl.mixin.client;
 
-import io.github.ladysnake.locki.InventoryKeeper;
 import io.github.ladysnake.locki.impl.PlayerInventoryKeeper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -42,8 +41,6 @@ public abstract class MinecraftClientMixin {
         ClientPlayerEntity player = this.player;
         assert player != null;
 
-        if (InventoryKeeper.get(player).isSlotLocked(player.inventory.selectedSlot)) {
-            player.inventory.selectedSlot = PlayerInventoryKeeper.MAINHAND_SLOT;
-        }
+        player.inventory.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(player, player.inventory.selectedSlot);
     }
 }
