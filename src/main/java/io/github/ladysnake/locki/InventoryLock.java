@@ -145,6 +145,8 @@ public final class InventoryLock {
     }
 
     /**
+     * Checks if this lock is directly or transitively applying to a set of inventory slots.
+     *
      * @param player the player which inventory is being checked
      * @param invNode the node describing the slots to check for locking
      * @return {@code true} if this lock is locking the specified {@code invNode} or one of its ancestors

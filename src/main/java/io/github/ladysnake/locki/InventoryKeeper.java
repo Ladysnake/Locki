@@ -18,7 +18,6 @@
 package io.github.ladysnake.locki;
 
 import io.github.ladysnake.locki.impl.LockiComponents;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 
@@ -38,10 +37,22 @@ public interface InventoryKeeper {
     /**
      * Checks for locks directly or transitively applying to a set of inventory slots.
      *
+     * <p>Slots represented by {@linkplain InventoryNode#getDescendants() descendants} of the given
+     * node may still be individually unlocked.
+     *
      * @param invNode the node describing the slots to check for locking
      * @return {@code true} if one or more locks are applied to {@code invNode} or one of its ancestors
+     * @see #isEntirelyLocked(InventoryNode)
      */
     boolean isLocked(InventoryNode invNode);
+
+    /**
+     * Checks for locks directly or transitively applying to the entirety of a set of inventory slots.
+     *
+     * @param invNode the node describing the slots to check for locking
+     * @return {@code true} if {@code invNode} and all its descendants are {@link #isLocked(InventoryNode) locked}
+     */
+    boolean isEntirelyLocked(InventoryNode invNode);
 
     /**
      * Checks for locks directly or transitively applying to an inventory slot.

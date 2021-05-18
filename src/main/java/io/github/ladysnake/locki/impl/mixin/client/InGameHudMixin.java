@@ -27,7 +27,11 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // Lower priority to load before Bedrockify's mixin, fix for issue Ladysnake/Requiem#198
@@ -55,7 +59,7 @@ public abstract class InGameHudMixin {
         if (inventoryKeeper.isLocked(DefaultInventoryNodes.MAIN_HAND)) {
             ci.cancel();
         } else {
-            this.renderMainHandOnly = inventoryKeeper.isLocked(DefaultInventoryNodes.MAIN_INVENTORY);
+            this.renderMainHandOnly = inventoryKeeper.isLocked(DefaultInventoryNodes.HOTBAR);
         }
     }
 

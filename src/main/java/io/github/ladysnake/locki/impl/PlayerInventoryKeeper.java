@@ -97,20 +97,28 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     public boolean isSlotLocked(int index) {
         int mainSize = player.inventory.main.size();
 
-        if (this.isLocked(DefaultInventoryNodes.MAIN_INVENTORY) && index > MAINHAND_SLOT && index < mainSize) {
-            return true;
+        if (index > MAINHAND_SLOT && index < mainSize) {
+            if (index < PlayerInventory.getHotbarSize()) {
+                return this.isLocked(DefaultInventoryNodes.HOTBAR);
+            } else {
+                return this.isLocked(DefaultInventoryNodes.MAIN_INVENTORY);
+            }
         }
 
         int armorIndex = index - mainSize;
         ImmutableList<InventoryNode> armorSlots = DefaultInventoryNodes.ARMOR_SLOTS;
 
         if (armorIndex >= 0 && armorIndex < armorSlots.size()) {
-            if (this.isLocked(armorSlots.get(armorIndex))) {
-                return true;
-            }
+            return this.isLocked(armorSlots.get(armorIndex));
         }
 
-        return (index < 9 && this.isLocked(DefaultInventoryNodes.MAIN_HAND)) || (index == OFFHAND_SLOT && this.isLocked(DefaultInventoryNodes.OFF_HAND));
+        if (index == MAINHAND_SLOT) {
+            return this.isLocked(DefaultInventoryNodes.MAIN_HAND);
+        }
+        if (index == OFFHAND_SLOT) {
+            return this.isLocked(DefaultInventoryNodes.OFF_HAND);
+        }
+        return false;
     }
 
     @Override

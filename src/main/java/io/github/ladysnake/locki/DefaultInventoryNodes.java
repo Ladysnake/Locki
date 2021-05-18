@@ -30,8 +30,16 @@ public final class DefaultInventoryNodes {
      * Controls access to {@link PlayerInventory#main}
      */
     public static final InventoryNode MAIN_INVENTORY = Locki.registerNode(INVENTORY, "main");
+    /**
+     * Controls access to the eight last slots of a player's hotbar. The first one is controlled by {@link #MAIN_HAND}.
+     * If {@link #MAIN_HAND} is locked, those slots will only be accessible through the inventory screen.
+     */
+    public static final InventoryNode HOTBAR         = Locki.registerNode(MAIN_INVENTORY, "hotbar");
 
     public static final InventoryNode HANDS          = Locki.registerNode(INVENTORY, "hands");
+    /**
+     * Controls access to the first slot of a player's hotbar, as well as use of the hotbar in-world.
+     */
     public static final InventoryNode MAIN_HAND      = Locki.registerNode(HANDS, "main_hand");
     public static final InventoryNode OFF_HAND       = Locki.registerNode(HANDS, "off_hand");
 
