@@ -39,6 +39,6 @@ public abstract class ClientPlayerInteractionManagerMixin {
         ClientPlayerEntity player = this.client.player;
         assert player != null;
 
-        player.inventory.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(player, player.inventory.selectedSlot);
+        player.getInventory().selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(player, player.getInventory().selectedSlot);
     }
 }

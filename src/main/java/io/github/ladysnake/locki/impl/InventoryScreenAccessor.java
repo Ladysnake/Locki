@@ -17,8 +17,8 @@
  */
 package io.github.ladysnake.locki.impl;
 
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 
 public interface InventoryScreenAccessor {
-    AbstractButtonWidget locki$getRecipeBookButton();
+    ClickableWidget locki$getRecipeBookButton();
 }

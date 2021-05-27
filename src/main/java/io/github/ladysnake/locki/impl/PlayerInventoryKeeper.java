@@ -106,7 +106,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
 
     @Override
     public boolean isSlotLocked(int index) {
-        int mainSize = player.inventory.main.size();
+        int mainSize = player.getInventory().main.size();
 
         if (index > MAINHAND_SLOT && index < mainSize) {
             if (index < PlayerInventory.getHotbarSize()) {

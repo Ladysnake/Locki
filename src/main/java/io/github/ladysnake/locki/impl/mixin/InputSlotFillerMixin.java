@@ -22,7 +22,7 @@ import io.github.ladysnake.locki.InventoryKeeper;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.recipe.InputSlotFiller;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeFinder;
+import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,13 +32,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(InputSlotFiller.class)
 public abstract class InputSlotFillerMixin {
-    @Shadow protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
+    @Shadow protected AbstractRecipeScreenHandler<?> handler;
 
-    @Redirect(method = "fillInputSlots(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/recipe/Recipe;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeFinder;findRecipe(Lnet/minecraft/recipe/Recipe;Lit/unimi/dsi/fastutil/ints/IntList;)Z"))
-    private boolean blockInventoryCrafting(RecipeFinder recipeFinder, Recipe<?> recipe, IntList outMatchingInputIds, ServerPlayerEntity entity) {
-        if (this.craftingScreenHandler == entity.playerScreenHandler && InventoryKeeper.get(entity).isLocked(DefaultInventoryNodes.CRAFTING_GRID)) {
+    @Redirect(method = "fillInputSlots(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/recipe/Recipe;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeMatcher;match(Lnet/minecraft/recipe/Recipe;Lit/unimi/dsi/fastutil/ints/IntList;)Z"))
+    private boolean blockInventoryCrafting(RecipeMatcher recipeFinder, Recipe<?> recipe, IntList outMatchingInputIds, ServerPlayerEntity entity) {
+        if (this.handler == entity.playerScreenHandler && InventoryKeeper.get(entity).isLocked(DefaultInventoryNodes.CRAFTING_GRID)) {
             return false;
         }
-        return recipeFinder.findRecipe(recipe, outMatchingInputIds);
+        return recipeFinder.match(recipe, outMatchingInputIds);
     }
 }

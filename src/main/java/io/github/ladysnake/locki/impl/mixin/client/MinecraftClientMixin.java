@@ -20,6 +20,7 @@ package io.github.ladysnake.locki.impl.mixin.client;
 import io.github.ladysnake.locki.impl.PlayerInventoryKeeper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,6 +42,7 @@ public abstract class MinecraftClientMixin {
         ClientPlayerEntity player = this.player;
         assert player != null;
 
-        player.inventory.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(player, player.inventory.selectedSlot);
+        PlayerInventory inventory = player.getInventory();
+        inventory.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(player, inventory.selectedSlot);
     }
 }

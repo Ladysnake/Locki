@@ -26,8 +26,8 @@ import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 
 import java.util.BitSet;
@@ -142,18 +142,18 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     }
 
     @Override
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(NbtCompound tag) {
         if (tag.contains("locks", NbtType.COMPOUND)) {
             clearCache();
             getLocks().clear();
-            CompoundTag dict = tag.getCompound("locks");
+            NbtCompound dict = tag.getCompound("locks");
             // need to order the keys to avoid overwriting entries as we go
             for (String key : new TreeSet<>(dict.getKeys())) {
                 InventoryNode node = Locki.getNode(key);
                 if (node != null) {
-                    ListTag list = dict.getList(key, NbtType.COMPOUND);
+                    NbtList list = dict.getList(key, NbtType.COMPOUND);
                     for (int i = 0; i < list.size(); i++) {
-                        CompoundTag lockInfo = list.getCompound(i);
+                        NbtCompound lockInfo = list.getCompound(i);
                         InventoryLock lock = Locki.getLock(Identifier.tryParse(lockInfo.getString("id")));
                         if (lock != null) {
                             this.updateLock(lock, node, lockInfo.getBoolean("locking"));
@@ -169,12 +169,12 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     }
 
     @Override
-    public void writeToNbt(CompoundTag tag) {
-        CompoundTag dict = new CompoundTag();
+    public void writeToNbt(NbtCompound tag) {
+        NbtCompound dict = new NbtCompound();
         for (Map.Entry<InventoryNode, Reference2BooleanMap<InventoryLock>> nodeEntry : getLocks().entrySet()) {
-            ListTag list = new ListTag();
+            NbtList list = new NbtList();
             for (Reference2BooleanMap.Entry<InventoryLock> lockEntry : nodeEntry.getValue().reference2BooleanEntrySet()) {
-                CompoundTag l = new CompoundTag();
+                NbtCompound l = new NbtCompound();
                 l.putString("id", lockEntry.getKey().getId().toString());
                 l.putBoolean("locking", lockEntry.getBooleanValue());
                 list.add(l);
