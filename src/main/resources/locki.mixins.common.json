@@ -13,7 +13,8 @@
     "ScreenHandlerMixin",
     "ServerPlayNetworkHandlerMixin",
     "SlotMixin",
-    "UpdateSelectedSlotC2SPacketAccessor"
+    "UpdateSelectedSlotC2SPacketAccessor",
+    "UpdateSelectedSlotC2SPacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1
