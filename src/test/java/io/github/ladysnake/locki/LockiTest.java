@@ -59,6 +59,13 @@ public class LockiTest {
     }
 
     @Test
+    public void registerLockSeveralTimes() {
+        InventoryLock a = Locki.registerLock(new Identifier("a"));
+        assertEquals(a, Locki.registerLock(new Identifier("a"), true));
+        assertThrows(IllegalStateException.class, () -> Locki.registerLock(new Identifier("a"), false));
+    }
+
+    @Test
     public void getLock() {
         Identifier a = new Identifier("test", "a");
         Identifier b = new Identifier("test", "b");

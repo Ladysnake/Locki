@@ -60,12 +60,32 @@ public final class Locki implements ModInitializer {
     /**
      * Registers an {@link InventoryLock} if it does not already exist.
      *
+     * <p>Calling this method is equivalent to {@code registerLock(id, true)}.
+     *
      * @param id a unique identifier for the created lock
      * @return the (created or previously registered) lock
      */
     public static synchronized InventoryLock registerLock(Identifier id) {
+        return registerLock(id, true);
+    }
+
+    /**
+     * Registers an {@link InventoryLock} if it does not already exist.
+     *
+     * <p>Persistent locks will be saved with the player's data.
+     * They will persist through re-logging and coming back from the End.
+     * Non-persistent locks depend on an external persistence mechanism to not randomly disappear.
+     *
+     * @param id a unique identifier for the created lock
+     * @param persistent whether this lock should be independently saved with the player's data
+     * @return the (created or previously registered) lock
+     * @throws IllegalStateException if a lock was previously registered with a different {@code persistent} value
+     */
+    public static synchronized InventoryLock registerLock(Identifier id, boolean persistent) {
         Preconditions.checkNotNull(id);
-        return locks.computeIfAbsent(id, id1 -> new InventoryLock(id1, nextId++));
+        InventoryLock l = locks.computeIfAbsent(id, id1 -> new InventoryLock(id1, nextId++, persistent));
+        if (l.shouldSave() != persistent) throw new IllegalStateException("Lock %s registered twice with differing persistence (%s, %s)".formatted(id, l.shouldSave(), persistent));
+        return l;
     }
 
     /**

@@ -31,10 +31,12 @@ import net.minecraft.util.Identifier;
 public final class InventoryLock {
     private final Identifier id;
     private final int rawId;
+    private final boolean persistent;
 
-    InventoryLock(Identifier id, int rawId) {
+    InventoryLock(Identifier id, int rawId, boolean persistent) {
         this.id = id;
         this.rawId = rawId;
+        this.persistent = persistent;
     }
 
     /**
@@ -54,6 +56,13 @@ public final class InventoryLock {
      */
     public int getRawId() {
         return this.rawId;
+    }
+
+    /**
+     * @return {@code true} if this lock should be saved with the player, {@code false} otherwise
+     */
+    public boolean shouldSave() {
+        return this.persistent;
     }
 
     /**
@@ -173,6 +182,6 @@ public final class InventoryLock {
 
     @Override
     public String toString() {
-        return this.id.toString();
+        return "🔒[" + this.id.toString() + "]";
     }
 }

@@ -144,8 +144,8 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     @Override
     public void readFromNbt(NbtCompound tag) {
         if (tag.contains("locks", NbtType.COMPOUND)) {
-            clearCache();
-            getLocks().clear();
+            this.clearCache();
+            this.getLocks().clear();
             NbtCompound dict = tag.getCompound("locks");
             // need to order the keys to avoid overwriting entries as we go
             for (String key : new TreeSet<>(dict.getKeys())) {
@@ -158,11 +158,11 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
                         if (lock != null) {
                             this.updateLock(lock, node, lockInfo.getBoolean("locking"));
                         } else {
-                            Locki.LOGGER.error("Dropping unregistered inventory lock " + lockInfo.asString());
+                            Locki.LOGGER.error("Dropping unregistered inventory lock {}", lockInfo.asString());
                         }
                     }
                 } else {
-                    Locki.LOGGER.error("Dropping lock data for unregistered inventory node " + key);
+                    Locki.LOGGER.error("Dropping lock data for unregistered inventory node {}", key);
                 }
             }
         }
@@ -171,16 +171,22 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     @Override
     public void writeToNbt(NbtCompound tag) {
         NbtCompound dict = new NbtCompound();
-        for (Map.Entry<InventoryNode, Reference2BooleanMap<InventoryLock>> nodeEntry : getLocks().entrySet()) {
+        for (Map.Entry<InventoryNode, Reference2BooleanMap<InventoryLock>> nodeEntry : this.getLocks().entrySet()) {
             NbtList list = new NbtList();
             for (Reference2BooleanMap.Entry<InventoryLock> lockEntry : nodeEntry.getValue().reference2BooleanEntrySet()) {
-                NbtCompound l = new NbtCompound();
-                l.putString("id", lockEntry.getKey().getId().toString());
-                l.putBoolean("locking", lockEntry.getBooleanValue());
-                list.add(l);
+                if (lockEntry.getKey().shouldSave()) {
+                    NbtCompound l = new NbtCompound();
+                    l.putString("id", lockEntry.getKey().getId().toString());
+                    l.putBoolean("locking", lockEntry.getBooleanValue());
+                    list.add(l);
+                }
             }
-            dict.put(nodeEntry.getKey().getFullName(), list);
+            if (!list.isEmpty()) {
+                dict.put(nodeEntry.getKey().getFullName(), list);
+            }
         }
-        tag.put("locks", dict);
+        if (!dict.isEmpty()) {
+            tag.put("locks", dict);
+        }
     }
 }

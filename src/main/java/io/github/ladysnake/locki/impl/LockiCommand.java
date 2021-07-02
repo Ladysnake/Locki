@@ -40,7 +40,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public final class LockiCommand {
-    public static final InventoryLock COMMAND_LOCK = Locki.registerLock(new Identifier("locki", "commands"));
+    public static final InventoryLock COMMAND_LOCK = Locki.registerLock(new Identifier("locki", "commands"), true);
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal("locki")

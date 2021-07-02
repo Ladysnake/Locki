@@ -20,7 +20,9 @@ package io.github.ladysnake.locki.impl;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.Locki;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,5 +70,31 @@ public class InventoryKeeperBaseTest {
         System.out.println("Before: " + instance.getCache());
         instance.forceRefresh();
         System.out.println("After: " + instance.getCache());
+    }
+
+    @Test
+    public void serializesCorrectly() {
+        InventoryKeeperBase instance = new InventoryKeeperBase();
+        InventoryLock lock1 = Locki.registerLock(new Identifier("test", "test1"), true);
+        InventoryLock lock2 = Locki.registerLock(new Identifier("test", "test2"), true);
+        InventoryLock lock3 = Locki.registerLock(new Identifier("test", "test3"), false);
+        instance.addLock(lock1, DefaultInventoryNodes.HANDS);
+        instance.addLock(lock1, DefaultInventoryNodes.ARMOR);
+        instance.addLock(lock2, DefaultInventoryNodes.HEAD);
+        instance.addLock(lock3, DefaultInventoryNodes.INVENTORY);
+        assertTrue(instance.isLockedBy(lock1, DefaultInventoryNodes.HANDS));
+        assertTrue(instance.isLockedBy(lock1, DefaultInventoryNodes.ARMOR));
+        assertTrue(instance.isLockedBy(lock1, DefaultInventoryNodes.HEAD));
+        assertTrue(instance.isLockedBy(lock2, DefaultInventoryNodes.HEAD));
+        assertTrue(instance.isLockedBy(lock3, DefaultInventoryNodes.HEAD));
+        assertTrue(instance.isLockedBy(lock3, DefaultInventoryNodes.INVENTORY));
+        InventoryKeeperBase copy = new InventoryKeeperBase();
+        copy.readFromNbt(Util.make(new NbtCompound(), instance::writeToNbt));
+        assertTrue(copy.isLockedBy(lock1, DefaultInventoryNodes.HANDS));
+        assertTrue(copy.isLockedBy(lock1, DefaultInventoryNodes.ARMOR));
+        assertTrue(copy.isLockedBy(lock1, DefaultInventoryNodes.HEAD));
+        assertTrue(copy.isLockedBy(lock2, DefaultInventoryNodes.HEAD));
+        assertFalse(copy.isLockedBy(lock3, DefaultInventoryNodes.HEAD));
+        assertFalse(copy.isLockedBy(lock3, DefaultInventoryNodes.INVENTORY));
     }
 }
