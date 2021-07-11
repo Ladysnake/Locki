@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class RecipeBookWidgetMixin {
     @Shadow protected MinecraftClient client;
 
-    @Inject(method = "isOpen", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isGuiOpen", at = @At("HEAD"), cancellable = true)
     private void forceCloseGui(CallbackInfoReturnable<Boolean> cir) {
         if (MinecraftClient.getInstance().currentScreen instanceof InventoryScreen && InventoryKeeper.get(this.client.player).isLocked(DefaultInventoryNodes.CRAFTING_BOOK)) {
             cir.setReturnValue(false);
