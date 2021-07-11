@@ -28,7 +28,6 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
@@ -49,9 +48,6 @@ public class LockiClient implements ClientModInitializer {
                     if (recipeBookWidget.isOpen()) {
                         recipeBookWidget.toggleOpen();
                     }
-                } else if (!(mc.currentScreen instanceof RecipeBookProvider)) {
-                    assert mc.player != null;
-                    mc.player.getRecipeBook().setGuiOpen(RecipeBookCategory.CRAFTING, false);
                 }
             }
         }
