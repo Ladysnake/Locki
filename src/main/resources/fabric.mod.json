@@ -37,6 +37,10 @@
     {
       "environment": "*",
       "config": "locki.mixins.common.json"
+    },
+    {
+      "environment": "*",
+      "config": "locki.mixins.compat.json"
     }
   ],
 

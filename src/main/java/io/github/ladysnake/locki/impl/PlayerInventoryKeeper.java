@@ -26,6 +26,7 @@ import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.InventoryLockingChangeCallback;
 import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.Locki;
+import io.github.ladysnake.locki.ModdedInventoryNodes;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -38,6 +39,10 @@ import java.util.Map;
 public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSyncedComponent {
     public static final int MAINHAND_SLOT = 0;
     public static final int OFFHAND_SLOT = 40;
+    // the back and belt slots are provided by the BackSlot mod
+    // please someone notify me if the indices change
+    public static final int BACK_SLOT = 41;
+    public static final int BELT_SLOT = 42;
 
     public static int fixSelectedSlot(PlayerEntity player, int selectedSlot) {
         InventoryKeeper inventoryKeeper = InventoryKeeper.get(player);
@@ -123,13 +128,13 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
             return this.isLocked(armorSlots.get(armorIndex));
         }
 
-        if (index == MAINHAND_SLOT) {
-            return this.isLocked(DefaultInventoryNodes.MAIN_HAND);
-        }
-        if (index == OFFHAND_SLOT) {
-            return this.isLocked(DefaultInventoryNodes.OFF_HAND);
-        }
-        return false;
+        return switch (index) {
+            case MAINHAND_SLOT -> this.isLocked(DefaultInventoryNodes.MAIN_HAND);
+            case OFFHAND_SLOT -> this.isLocked(DefaultInventoryNodes.OFF_HAND);
+            case BACK_SLOT -> this.isLocked(ModdedInventoryNodes.BACK);
+            case BELT_SLOT -> this.isLocked(ModdedInventoryNodes.BELT);
+            default -> false;
+        };
     }
 
     @Override

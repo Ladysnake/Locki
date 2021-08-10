@@ -42,7 +42,7 @@ public class InventoryLockItem extends Item {
         ItemStack heldStack = user.getStackInHand(hand);
 
         if (!world.isClient) {
-            NbtCompound data = heldStack.getOrCreateSubTag("lockii");
+            NbtCompound data = heldStack.getOrCreateSubNbt("lockii");
             int currentDebug = data.getInt("debug");
 
             if (user.isSneaking()) {

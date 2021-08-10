@@ -27,6 +27,7 @@ sourceSets {
 }
 
 repositories {
+	mavenCentral()
 	maven {
 		name = 'Ladysnake Mods'
 		url = 'https://ladysnake.jfrog.io/artifactory/mods'
@@ -47,7 +48,26 @@ repositories {
 			includeGroup 'com.terraformersmc'
 		}
 	}
-	mavenCentral()
+	maven {
+		url = "https://maven.siphalor.de/"
+		content {
+			includeGroup 'de.siphalor'
+		}
+	}
+	maven {
+		url = "https://maven.shedaniel.me/"
+		content {
+			includeGroupByRegex 'me\\.shedaniel\\..*'
+			includeGroup 'me.sargunvohra.mcmods'
+		}
+	}
+	maven {
+		name = 'JitPack'
+		url = 'https://jitpack.io'
+		content {
+			includeGroupByRegex '(io|com)\\.github\\..*'
+		}
+	}
 }
 
 dependencies {
@@ -65,6 +85,9 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${cca_version}"
 	modImplementation "me.lucko:fabric-permissions-api:${fpa_version}"
 	include "me.lucko:fabric-permissions-api:${fpa_version}"
+
+	modCompileOnly("com.github.Globox1997:BackSlot:${backslot_version}")
+//	modRuntime("com.github.Globox1997:BackSlot:${backslot_version}")
 
 	compileOnly "com.demonwav.mcdev:annotations:1.0"
 	modRuntime 'com.terraformersmc:modmenu:2.0.0-beta.4'

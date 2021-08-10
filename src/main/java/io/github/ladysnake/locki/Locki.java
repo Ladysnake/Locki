@@ -155,6 +155,7 @@ public final class Locki implements ModInitializer {
     @Override
     public void onInitialize() {
         DefaultInventoryNodes.init();
+        ModdedInventoryNodes.init();
 
         ArgumentTypes.register("locki:inventory_lock", InventoryLockArgumentType.class, new ConstantArgumentSerializer<>(InventoryLockArgumentType::inventoryLock));
         ArgumentTypes.register("locki:inventory_node", InventoryNodeArgumentType.class, new ConstantArgumentSerializer<>(InventoryNodeArgumentType::inventoryNode));
