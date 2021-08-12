@@ -29,6 +29,6 @@ public final class LockiComponents implements EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerForPlayers(INVENTORY_KEEPER, PlayerInventoryKeeper::new, RespawnCopyStrategy.INVENTORY);
+        registry.registerForPlayers(INVENTORY_KEEPER, PlayerInventoryKeeper::new, RespawnCopyStrategy.ALWAYS_COPY);
     }
 }
