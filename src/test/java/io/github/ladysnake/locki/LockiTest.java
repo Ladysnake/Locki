@@ -43,7 +43,7 @@ public class LockiTest {
 
     @Before
     public void setUp() {
-        Locki.reset();
+        Locki.reset(s -> s.contains("test"));
     }
 
     @Test
@@ -78,18 +78,18 @@ public class LockiTest {
     public void registerNode() {
         assertThrows(NullPointerException.class, () -> Locki.registerNode(null, null));
         assertThrows(NullPointerException.class, () -> Locki.registerNode(DefaultInventoryNodes.INVENTORY, null));
-        assertThrows(NullPointerException.class, () -> Locki.registerNode(null, "a"));
-        assertThrows(IllegalArgumentException.class, () -> Locki.registerNode(DefaultInventoryNodes.INVENTORY, "a.b"));
-        assertNull("registering an invalid node has side effects", Locki.getNode("a.b"));
+        assertThrows(NullPointerException.class, () -> Locki.registerNode(null, "test-a"));
+        assertThrows(IllegalArgumentException.class, () -> Locki.registerNode(DefaultInventoryNodes.INVENTORY, "test-a.b"));
+        assertNull("registering an invalid node has side effects", Locki.getNode("test-a.b"));
         assertNull("registering an invalid node has side effects", Locki.getNode(null));
-        assertEquals("inventory.main.a", Locki.registerNode(DefaultInventoryNodes.MAIN_INVENTORY, "a").getFullName());
+        assertEquals("inventory.main.test-a", Locki.registerNode(DefaultInventoryNodes.MAIN_INVENTORY, "test-a").getFullName());
     }
 
     @Test
     public void getNode() {
-        InventoryNode node = Locki.registerNode(DefaultInventoryNodes.ARMOR, "b");
-        assertEquals(node, Locki.getNode("inventory.armor.b"));
-        assertNull(Locki.getNode("inventory.armor.a"));
+        InventoryNode node = Locki.registerNode(DefaultInventoryNodes.ARMOR, "test-b");
+        assertEquals(node, Locki.getNode("inventory.armor.test-b"));
+        assertNull(Locki.getNode("inventory.armor.test-a"));
     }
 
     @Test
@@ -106,11 +106,11 @@ public class LockiTest {
         InventoryLock lock = Locki.registerLock(new Identifier("test", "test"));
         InventoryNode node = Locki.registerNode(InventoryNode.ROOT, "test");
         Locki.registerNode(node, "child");
-        Locki.registerNode(InventoryNode.ROOT, "foo");
+        Locki.registerNode(InventoryNode.ROOT, "test-foo");
         keeper.addLock(lock, node);
 
         assertFalse(Permissions.check(player, "locki.access.test", true));
         assertFalse(Permissions.check(player, "locki.access.test.child", true));
-        assertTrue(Permissions.check(player, "locki.access.foo", true));
+        assertTrue(Permissions.check(player, "locki.access.test-foo", true));
     }
 }

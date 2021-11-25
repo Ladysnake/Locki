@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "io.github.ladysnake.lockii.Lockii"
+    ],
+    "fabric-gametest": [
+      "io.github.ladysnake.lockii.tests.LockiTestSuite"
     ]
   },
   "depends": {

@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -175,9 +176,9 @@ public final class Locki implements ModInitializer {
     }
 
     @VisibleForTesting
-    synchronized static void reset() {
+    synchronized static void reset(Predicate<String> nodeRemovalFilter) {
         locks.clear();
-        nodes.clear();
+        nodes.keySet().removeIf(nodeRemovalFilter);
         nextId = 0;
     }
 }

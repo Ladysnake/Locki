@@ -55,22 +55,14 @@ public final class DefaultInventoryNodes {
     public static final InventoryNode CRAFTING_BOOK  = Locki.registerNode(CRAFTING, "book");
 
     public static InventoryNode get(EquipmentSlot equipmentSlot) {
-        switch (equipmentSlot) {
-            case MAINHAND:
-                return MAIN_HAND;
-            case OFFHAND:
-                return OFF_HAND;
-            case FEET:
-                return FEET;
-            case LEGS:
-                return LEGS;
-            case CHEST:
-                return CHEST;
-            case HEAD:
-                return HEAD;
-            default:
-                return INVENTORY;
-        }
+        return switch (equipmentSlot) {
+            case MAINHAND -> MAIN_HAND;
+            case OFFHAND -> OFF_HAND;
+            case FEET -> FEET;
+            case LEGS -> LEGS;
+            case CHEST -> CHEST;
+            case HEAD -> HEAD;
+        };
     }
 
     static void init() {
