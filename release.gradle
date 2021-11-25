@@ -68,7 +68,6 @@ artifactoryPublish.dependsOn build
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from components.java
             // add all the jars that should be included when publishing to maven
             artifact(remapLibJar) {
                 classifier ''
