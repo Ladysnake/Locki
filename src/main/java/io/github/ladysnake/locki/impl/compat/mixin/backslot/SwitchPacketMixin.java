@@ -22,22 +22,17 @@ import net.backslot.network.SwitchPacket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(SwitchPacket.class)
+@Mixin(SwitchPacket.SwitchPacketReceiver.class)
 public abstract class SwitchPacketMixin {
-    @Shadow public static native boolean isItemAllowed(ItemStack stack, int slot);
-
-    @Dynamic("Lambda handler for SWITCH_PACKET")
-    @Redirect(method = "lambda$init$0", at = @At(value = "INVOKE", target = "Lnet/backslot/network/SwitchPacket;isItemAllowed(Lnet/minecraft/item/ItemStack;I)Z"))
+    @Redirect(method = "receive", at = @At(value = "INVOKE", target = "Lnet/backslot/network/SwitchPacket;isItemAllowed(Lnet/minecraft/item/ItemStack;I)Z"))
     private static boolean lockAdditionalSlots(ItemStack stack, int slot, MinecraftServer server, ServerPlayerEntity player) {
         if (InventoryKeeper.get(player).isSlotLocked(slot)) {
             return false;
         }
-        return isItemAllowed(stack, slot);
+        return SwitchPacket.isItemAllowed(stack, slot);
     }
 }
