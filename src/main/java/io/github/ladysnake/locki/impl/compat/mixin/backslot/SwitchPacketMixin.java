@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(SwitchPacket.SwitchPacketReceiver.class)
 public abstract class SwitchPacketMixin {
     @Redirect(method = "receive", at = @At(value = "INVOKE", target = "Lnet/backslot/network/SwitchPacket;isItemAllowed(Lnet/minecraft/item/ItemStack;I)Z"))
-    private static boolean lockAdditionalSlots(ItemStack stack, int slot, MinecraftServer server, ServerPlayerEntity player) {
+    private boolean lockAdditionalSlots(ItemStack stack, int slot, MinecraftServer server, ServerPlayerEntity player) {
         if (InventoryKeeper.get(player).isSlotLocked(slot)) {
             return false;
         }
