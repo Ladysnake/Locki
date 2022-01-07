@@ -129,8 +129,7 @@ dependencies {
 
 	compileOnly "com.demonwav.mcdev:annotations:1.0"
 
-	modCompileOnly "curse.maven:BackSlot-402739:${backslot_version}"
-	modLocalRuntime "curse.maven:BackSlot-402739:${backslot_version}"
+	modLocalRuntime modCompileOnly("curse.maven:BackSlot-402739:${backslot_version}")
 	modLocalRuntime "me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}"
 
 	modLocalRuntime "com.terraformersmc:modmenu:${modmenu_version}"

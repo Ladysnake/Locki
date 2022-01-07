@@ -64,9 +64,9 @@ repositories {
 }
 
 dependencies {
-    modImplementation "io.github.ladysnake:locki:${impersonate_version}"
-    include "io.github.ladysnake:locki:${impersonate_version}"
-    // Impersonate dependencies
+    modImplementation "io.github.ladysnake:locki:${locki_version}"
+    include "io.github.ladysnake:locki:${locki_version}"
+    // locki dependencies
     include "me.lucko:fabric-permissions-api:${fpa_version}"
     include "com.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${cca_version}"
     include "com.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${cca_version}"
@@ -76,7 +76,7 @@ dependencies {
 You can then add the library version to your `gradle.properties`file:
 
 ```properties
-# Impersonate
+# Locki
 locki_version = 0.x.y
 # Fabric Permissions API
 fpa_version = 0.1-SNAPSHOT
