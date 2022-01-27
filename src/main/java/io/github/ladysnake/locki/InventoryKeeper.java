@@ -84,6 +84,14 @@ public interface InventoryKeeper {
      */
     void removeLock(InventoryLock lock, InventoryNode invNode);
 
+    default void toggleLock(InventoryLock lock, InventoryNode invNode) {
+        if (this.isLockedBy(lock, invNode)) {
+            this.removeLock(lock, invNode);
+        } else {
+            this.addLock(lock, invNode);
+        }
+    }
+
     /**
      * Rebuilds the lock cache
      */

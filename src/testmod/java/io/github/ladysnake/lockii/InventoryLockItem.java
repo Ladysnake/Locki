@@ -50,7 +50,7 @@ public class InventoryLockItem extends Item {
                 data.putInt("debug", newDebug);
                 user.sendMessage(new LiteralText("Now managing locking for " + ALL_DEFAULT_NODES[newDebug]), true);
             } else {
-                LOCK.toggle(user, ALL_DEFAULT_NODES[currentDebug]);
+                user.getInventory().toggleLock(LOCK, ALL_DEFAULT_NODES[currentDebug]);
             }
         }
         return TypedActionResult.success(heldStack);

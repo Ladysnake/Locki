@@ -19,6 +19,8 @@ package io.github.ladysnake.locki.impl.mixin;
 
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryKeeper;
+import io.github.ladysnake.locki.InventoryLock;
+import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.impl.LockiComponents;
 import io.github.ladysnake.locki.impl.PlayerInventoryKeeper;
 import net.fabricmc.api.EnvType;
@@ -40,8 +42,10 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Set;
+
 @Mixin(PlayerInventory.class)
-public abstract class PlayerInventoryMixin {
+public abstract class PlayerInventoryMixin implements InventoryKeeper {
     @Shadow
     public int selectedSlot;
 
@@ -56,6 +60,52 @@ public abstract class PlayerInventoryMixin {
 
     @Nullable
     private InventoryKeeper locki$keeper;
+
+    @Override
+    public boolean isLocked(InventoryNode invNode) {
+        return this.locki$keeper != null && locki$keeper.isLocked(invNode);
+    }
+
+    @Override
+    public boolean isEntirelyLocked(InventoryNode invNode) {
+        return this.locki$keeper != null && locki$keeper.isEntirelyLocked(invNode);
+    }
+
+    @Override
+    public boolean isSlotLocked(int slot) {
+        return this.locki$keeper != null && locki$keeper.isSlotLocked(slot);
+    }
+
+    @Override
+    public boolean isLockedBy(InventoryLock lock, InventoryNode invNode) {
+        return this.locki$keeper != null && locki$keeper.isLockedBy(lock, invNode);
+    }
+
+    @Override
+    public void addLock(InventoryLock lock, InventoryNode invNode) {
+        if (this.locki$keeper != null) {
+            locki$keeper.addLock(lock, invNode);
+        }
+    }
+
+    @Override
+    public void removeLock(InventoryLock lock, InventoryNode invNode) {
+        if (this.locki$keeper != null) {
+            locki$keeper.removeLock(lock, invNode);
+        }
+    }
+
+    @Override
+    public void forceRefresh() {
+        if (this.locki$keeper != null) {
+            locki$keeper.forceRefresh();
+        }
+    }
+
+    @Override
+    public Set<InventoryLock> getAllPlacedLocks(InventoryNode invNode) {
+        return this.locki$keeper != null ? locki$keeper.getAllPlacedLocks(invNode) : Set.of();
+    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void constructor(PlayerEntity player, CallbackInfo ci) {
@@ -77,7 +127,7 @@ public abstract class PlayerInventoryMixin {
     )
     private void preventHotbarSelection(CallbackInfo ci) {
         if (this.player != null) {
-            this.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(player, this.selectedSlot);
+            this.selectedSlot = PlayerInventoryKeeper.fixSelectedSlot(this.player, this.selectedSlot);
         }
     }
 

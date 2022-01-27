@@ -55,6 +55,11 @@
   "custom": {
     "cardinal-components": [
       "locki:inventory_keeper"
-    ]
+    ],
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1661": [
+        "io/github/ladysnake/locki/InventoryKeeper"
+      ]
+    }
   }
 }
