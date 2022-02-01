@@ -4,7 +4,7 @@ import java.time.Year
 
 plugins {
 	id 'fabric-loom' version '0.11-SNAPSHOT'
-	id 'io.github.juuxel.loom-quiltflower-mini' version "1.2.1" apply false	// TODO restore when loom-quiltflower is updated for loom 0.11
+	id 'io.github.juuxel.loom-quiltflower' version "1.6.0"
 	id 'org.cadixdev.licenser' version '0.6.1'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'com.jfrog.artifactory' version '4.21.0'
@@ -25,6 +25,7 @@ sourceSets {
 		compileClasspath += main.compileClasspath
 		runtimeClasspath += main.runtimeClasspath
 	}
+	dummy
 }
 
 loom {
@@ -137,6 +138,7 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core:3.+'
 
 	testmodImplementation sourceSets.main.output
+	annotationProcessor(sourceSets.dummy.output)
 }
 
 test {
