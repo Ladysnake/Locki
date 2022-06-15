@@ -24,7 +24,7 @@ import io.github.ladysnake.locki.Locki;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
@@ -102,9 +102,9 @@ public final class LockiCommand {
     private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, InventoryNode invNode, String command) {
         String name = invNode.getFullName();
         if (source.getEntity() == player) {
-            source.sendFeedback(new TranslatableText("locki:commands." + command + ".success.self", name), true);
+            source.sendFeedback(Text.translatable("locki:commands." + command + ".success.self", name), true);
         } else {
-            source.sendFeedback(new TranslatableText("locki:commands." + command + ".success.other", player.getDisplayName(), name), true);
+            source.sendFeedback(Text.translatable("locki:commands." + command + ".success.other", player.getDisplayName(), name), true);
         }
     }
 }

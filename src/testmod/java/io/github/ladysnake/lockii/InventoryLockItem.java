@@ -24,7 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -48,7 +48,7 @@ public class InventoryLockItem extends Item {
             if (user.isSneaking()) {
                 int newDebug = (currentDebug + 1) % ALL_DEFAULT_NODES.length;
                 data.putInt("debug", newDebug);
-                user.sendMessage(new LiteralText("Now managing locking for " + ALL_DEFAULT_NODES[newDebug]), true);
+                user.sendMessage(Text.literal("Now managing locking for " + ALL_DEFAULT_NODES[newDebug]), true);
             } else {
                 user.getInventory().toggleLock(LOCK, ALL_DEFAULT_NODES[currentDebug]);
             }

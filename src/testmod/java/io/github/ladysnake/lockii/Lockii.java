@@ -17,10 +17,11 @@
  */
 package io.github.ladysnake.lockii;
 
-import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
 public final class Lockii implements ModInitializer {
     public static Identifier id(String path) {
@@ -28,7 +29,7 @@ public final class Lockii implements ModInitializer {
     }
 
     @Override
-    public void onInitialize() {
+    public void onInitialize(ModContainer mod) {
         Registry.register(Registry.ITEM, id("inventory_lock"), new InventoryLockItem(new Item.Settings()));
     }
 }

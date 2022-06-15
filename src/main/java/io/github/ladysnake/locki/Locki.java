@@ -19,15 +19,14 @@ package io.github.ladysnake.locki;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.ladysnake.locki.impl.InventoryLockArgumentType;
 import io.github.ladysnake.locki.impl.InventoryNodeArgumentType;
 import io.github.ladysnake.locki.impl.LockiCommand;
 import me.lucko.fabric.api.permissions.v0.PermissionCheckEvent;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.command.argument.ArgumentTypes;
-import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.command.argument.IdentifierArgumentType;
+import net.minecraft.command.argument.SingletonArgumentInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
@@ -36,6 +35,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
+import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+import org.quiltmc.qsl.command.api.ServerArgumentType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -154,13 +157,13 @@ public final class Locki implements ModInitializer {
     Function<PlayerEntity, InventoryKeeper> keeperFunction = InventoryKeeper::get;
 
     @Override
-    public void onInitialize() {
+    public void onInitialize(ModContainer mod) {
         DefaultInventoryNodes.init();
         ModdedInventoryNodes.init();
 
-        ArgumentTypes.register("locki:inventory_lock", InventoryLockArgumentType.class, new ConstantArgumentSerializer<>(InventoryLockArgumentType::inventoryLock));
-        ArgumentTypes.register("locki:inventory_node", InventoryNodeArgumentType.class, new ConstantArgumentSerializer<>(InventoryNodeArgumentType::inventoryNode));
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> LockiCommand.register(dispatcher));
+        ServerArgumentType.register(new Identifier("locki", "inventory_lock"), InventoryLockArgumentType.class, SingletonArgumentInfo.contextFree(InventoryLockArgumentType::inventoryLock), t -> IdentifierArgumentType.identifier());
+        ServerArgumentType.register(new Identifier("locki", "inventory_node"), InventoryNodeArgumentType.class, SingletonArgumentInfo.contextFree(InventoryNodeArgumentType::inventoryNode), t -> StringArgumentType.string());
+        CommandRegistrationCallback.EVENT.register((dispatcher, ctx, dedicated) -> LockiCommand.register(dispatcher));
         PermissionCheckEvent.EVENT.register((source, permission) -> {
             if (source instanceof ServerCommandSource && permission.startsWith("locki.access.")) {
                 Entity entity = ((ServerCommandSource) source).getEntity();

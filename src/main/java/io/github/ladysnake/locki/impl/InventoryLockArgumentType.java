@@ -29,7 +29,7 @@ import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.Locki;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class InventoryLockArgumentType implements ArgumentType<InventoryLock> {
-    private static final DynamicCommandExceptionType NOT_FOUND_EXCEPTION = new DynamicCommandExceptionType(o -> new TranslatableText("locki:argument.inv_lock.not_found", o));
+    private static final DynamicCommandExceptionType NOT_FOUND_EXCEPTION = new DynamicCommandExceptionType(o -> Text.translatable("locki:argument.inv_lock.not_found", o));
 
     public static InventoryLockArgumentType inventoryLock() {
         return new InventoryLockArgumentType();
