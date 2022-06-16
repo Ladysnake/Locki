@@ -19,7 +19,7 @@
       }
     },
     "entrypoints": {
-      "main": [
+      "init": [
         "io.github.ladysnake.lockii.Lockii"
       ],
       "fabric-gametest": [

@@ -20,10 +20,10 @@
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
-      "main": [
+      "init": [
         "io.github.ladysnake.locki.Locki"
       ],
-      "client": [
+      "client_init": [
         "io.github.ladysnake.locki.impl.LockiClient"
       ],
       "cardinal-components": [

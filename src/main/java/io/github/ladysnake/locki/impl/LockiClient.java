@@ -20,7 +20,6 @@ package io.github.ladysnake.locki.impl;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryLockingChangeCallback;
 import io.github.ladysnake.locki.InventoryNode;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -30,6 +29,8 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
 public class LockiClient implements ClientModInitializer {
     public static final Identifier LOCKED_SLOT_SPRITE = new Identifier("locki", "gui/locked_slot");
@@ -58,7 +59,7 @@ public class LockiClient implements ClientModInitializer {
     }
 
     @Override
-    public void onInitializeClient() {
+    public void onInitializeClient(ModContainer mod) {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(LockiClient::registerSprites);
         InventoryLockingChangeCallback.EVENT.register(LockiClient::updateCraftingBookVisibility);
     }
