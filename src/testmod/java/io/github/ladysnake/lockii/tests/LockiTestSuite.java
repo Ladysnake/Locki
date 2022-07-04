@@ -19,20 +19,42 @@ package io.github.ladysnake.lockii.tests;
 
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryLock;
+import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.Locki;
 import io.github.ladysnake.locki.impl.LockiComponents;
 import io.github.ladysnake.lockii.Lockii;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
+import net.minecraft.util.Identifier;
 
 import static io.github.ladysnake.elmendorf.ByteBufChecker.any;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class LockiTestSuite implements FabricGameTest {
     public static final InventoryLock lock = Locki.registerLock(Lockii.id("test_suite"));
+
+    @GameTest(structureName = EMPTY_STRUCTURE)
+    public void checkPermission(TestContext ctx) {
+        ServerPlayerEntity player = ctx.spawnServerPlayer(0, 0, 0);
+
+        assertTrue(Permissions.check(player, "locki.access.inventory", true));
+        InventoryLock lock = Locki.registerLock(new Identifier("test", "test"));
+        InventoryNode node = Locki.registerNode(InventoryNode.ROOT, "test");
+        Locki.registerNode(node, "child");
+        Locki.registerNode(InventoryNode.ROOT, "test-foo");
+        player.getInventory().addLock(lock, node);
+
+        assertFalse(Permissions.check(player, "locki.access.test", true));
+        assertFalse(Permissions.check(player, "locki.access.test.child", true));
+        assertTrue(Permissions.check(player, "locki.access.test-foo", true));
+        ctx.complete();
+    }
 
     @GameTest(structureName = EMPTY_STRUCTURE)
     public void lockingPreventsItemPickup(TestContext ctx) {

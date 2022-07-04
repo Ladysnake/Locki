@@ -42,7 +42,6 @@ import org.quiltmc.qsl.command.api.ServerArgumentType;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -153,23 +152,23 @@ public final class Locki implements ModInitializer {
         return nodes.keySet().stream();
     }
 
-    @VisibleForTesting
-    Function<PlayerEntity, InventoryKeeper> keeperFunction = InventoryKeeper::get;
-
     @Override
     public void onInitialize(ModContainer mod) {
         DefaultInventoryNodes.init();
         ModdedInventoryNodes.init();
 
-        ServerArgumentType.register(new Identifier("locki", "inventory_lock"), InventoryLockArgumentType.class, SingletonArgumentInfo.contextFree(InventoryLockArgumentType::inventoryLock), t -> IdentifierArgumentType.identifier());
-        ServerArgumentType.register(new Identifier("locki", "inventory_node"), InventoryNodeArgumentType.class, SingletonArgumentInfo.contextFree(InventoryNodeArgumentType::inventoryNode), t -> StringArgumentType.string());
+        if (mod != null) { // Unit testing
+            ServerArgumentType.register(new Identifier("locki", "inventory_lock"), InventoryLockArgumentType.class, SingletonArgumentInfo.contextFree(InventoryLockArgumentType::inventoryLock), t -> IdentifierArgumentType.identifier());
+            ServerArgumentType.register(new Identifier("locki", "inventory_node"), InventoryNodeArgumentType.class, SingletonArgumentInfo.contextFree(InventoryNodeArgumentType::inventoryNode), t -> StringArgumentType.string());
+        }
+
         CommandRegistrationCallback.EVENT.register((dispatcher, ctx, dedicated) -> LockiCommand.register(dispatcher));
         PermissionCheckEvent.EVENT.register((source, permission) -> {
             if (source instanceof ServerCommandSource && permission.startsWith("locki.access.")) {
                 Entity entity = ((ServerCommandSource) source).getEntity();
                 if (entity instanceof PlayerEntity) {
                     InventoryNode node = getNode(permission.substring(13));
-                    if (node != null && keeperFunction.apply((PlayerEntity) entity).isLocked(node)) {
+                    if (node != null && InventoryKeeper.get((PlayerEntity) entity).isLocked(node)) {
                         return TriState.FALSE;
                     }
                 }
