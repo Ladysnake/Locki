@@ -31,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -112,7 +113,7 @@ public abstract class PlayerInventoryMixin implements InventoryKeeper {
         this.locki$keeper = LockiComponents.INVENTORY_KEEPER.maybeGet(player).orElse(null);
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     @Inject(method = {"addPickBlock", "scrollInHotbar"},
         at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/entity/player/PlayerInventory;selectedSlot:I", shift = At.Shift.AFTER)
     )

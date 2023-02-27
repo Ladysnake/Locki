@@ -27,6 +27,7 @@ import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 
@@ -143,7 +144,7 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        if (tag.contains("locks", NbtType.COMPOUND)) {
+        if (tag.contains("locks", NbtElement.COMPOUND_TYPE)) {
             this.clearCache();
             this.getLocks().clear();
             NbtCompound dict = tag.getCompound("locks");
@@ -151,7 +152,7 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
             for (String key : new TreeSet<>(dict.getKeys())) {
                 InventoryNode node = Locki.getNode(key);
                 if (node != null) {
-                    NbtList list = dict.getList(key, NbtType.COMPOUND);
+                    NbtList list = dict.getList(key, NbtElement.COMPOUND_TYPE);
                     for (int i = 0; i < list.size(); i++) {
                         NbtCompound lockInfo = list.getCompound(i);
                         InventoryLock lock = Locki.getLock(Identifier.tryParse(lockInfo.getString("id")));

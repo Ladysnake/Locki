@@ -1,0 +1,8 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "locki:gui/locked_slot"
+    }
+  ]
+}

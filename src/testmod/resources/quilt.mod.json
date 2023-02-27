@@ -22,7 +22,7 @@
       "init": [
         "io.github.ladysnake.lockii.Lockii"
       ],
-      "fabric-gametest": [
+      "quilt:game_test": [
         "io.github.ladysnake.lockii.tests.LockiTestSuite"
       ]
     },

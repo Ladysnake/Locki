@@ -18,21 +18,27 @@
 package io.github.ladysnake.locki.impl.compat.mixin.backslot;
 
 import io.github.ladysnake.locki.InventoryKeeper;
-import net.backslot.network.SwitchPacket;
+import net.backslot.network.SwitchPacketReceiver;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(SwitchPacket.SwitchPacketReceiver.class)
+@Mixin(SwitchPacketReceiver.class)
 public abstract class SwitchPacketMixin {
-    @Redirect(method = "receive", at = @At(value = "INVOKE", target = "Lnet/backslot/network/SwitchPacket;isItemAllowed(Lnet/minecraft/item/ItemStack;I)Z"))
+    @Shadow
+    public static boolean isItemAllowed(ItemStack stack, int slot) {
+        return false;
+    }
+
+    @Redirect(method = "receive", at = @At(value = "INVOKE", target = "Lnet/backslot/network/SwitchPacketReceiver;isItemAllowed(Lnet/minecraft/item/ItemStack;I)Z"))
     private boolean lockAdditionalSlots(ItemStack stack, int slot, MinecraftServer server, ServerPlayerEntity player) {
         if (InventoryKeeper.get(player).isSlotLocked(slot)) {
             return false;
         }
-        return SwitchPacket.isItemAllowed(stack, slot);
+        return isItemAllowed(stack, slot);
     }
 }

@@ -1,8 +1,7 @@
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-	id 'io.github.ladysnake.chenille' version '0.9.0'
-	id 'io.github.juuxel.loom-quiltflower' version "1.6.0"
+	id 'io.github.ladysnake.chenille' version '0.10.0'
 	id 'maven-publish'
 }
 
@@ -35,6 +34,10 @@ repositories {
 		shedaniel()
 	}
 	maven {
+		name = 'Quilt Snapshots'
+		url = 'https://maven.quiltmc.org/repository/snapshot'
+	}
+	maven {
 		url = "https://maven.siphalor.de/"
 		content {
 			includeGroup 'de.siphalor'
@@ -45,9 +48,7 @@ repositories {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered {
-		addLayer quiltMappings.mappings("org.quiltmc:quilt-mappings:${project.quilt_mappings}:v2")
-	}
+	mappings "org.quiltmc:quilt-mappings:${minecraft_version}+build.${quilt_mappings}:intermediary-v2"
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 
 	modImplementation "org.quiltmc:qsl:${qsl_version}+${minecraft_version}"
@@ -99,18 +100,21 @@ remapJar {
 	addNestedDependencies.set(false)
 }
 
-task standaloneJar(type: Jar, dependsOn: project.classes) {
+tasks.register("standaloneJar", Jar) {
 	from sourceSets.main.output
 	archiveClassifier.set('standalone-dev')
 }
 
-task remapStandaloneJar(type: RemapJarTask, dependsOn: project.standaloneJar) {
+tasks.register("remapStandaloneJar", RemapJarTask) {
+	dependsOn(project.standaloneJar)
 	archiveClassifier.set('standalone')
 	inputFile.set(standaloneJar.archiveFile)
 	addNestedDependencies.set(true)
 }
 
-assemble.dependsOn(remapStandaloneJar)
+tasks.named("assemble") {
+	dependsOn(remapStandaloneJar)
+}
 
 chenille {
 	configurePublishing {

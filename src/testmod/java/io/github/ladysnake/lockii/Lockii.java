@@ -18,8 +18,9 @@
 package io.github.ladysnake.lockii;
 
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
@@ -30,6 +31,6 @@ public final class Lockii implements ModInitializer {
 
     @Override
     public void onInitialize(ModContainer mod) {
-        Registry.register(Registry.ITEM, id("inventory_lock"), new InventoryLockItem(new Item.Settings()));
+        Registry.register(Registries.ITEM, id("inventory_lock"), new InventoryLockItem(new Item.Settings()));
     }
 }
