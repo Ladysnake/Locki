@@ -1,6 +1,6 @@
 /*
  * Locki
- * Copyright (C) 2021-2022 Ladysnake
+ * Copyright (C) 2021-2023 Ladysnake
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +23,6 @@ import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.InventoryNode;
 import io.github.ladysnake.locki.impl.LockiComponents;
 import io.github.ladysnake.locki.impl.PlayerInventoryKeeper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
