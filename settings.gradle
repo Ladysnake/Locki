@@ -18,3 +18,5 @@ pluginManagement {
 }
 
 rootProject.name = 'locki'
+
+include("junit-loader")

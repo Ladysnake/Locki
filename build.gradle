@@ -66,14 +66,14 @@ dependencies {
 	modLocalRuntime "com.terraformersmc:modmenu:${modmenu_version}"
 	modCompileOnly modLocalRuntime("io.github.ladysnake:elmendorf:${elmendorf_version}")
 
-	testImplementation 'junit:junit:4.13'
-	testImplementation 'org.mockito:mockito-core:3.+'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+	testImplementation project(":junit-loader")
 
 	annotationProcessor(sourceSets.dummy.output)
 }
 
 test {
-	useJUnit()
+	useJUnitPlatform()
 
 	maxHeapSize = '1G'
 }
@@ -108,7 +108,7 @@ tasks.register("standaloneJar", Jar) {
 tasks.register("remapStandaloneJar", RemapJarTask) {
 	dependsOn(project.standaloneJar)
 	archiveClassifier.set('standalone')
-	inputFile.set(standaloneJar.archiveFile)
+	inputFile.set(standaloneJar.archiveFile.get())
 	addNestedDependencies.set(true)
 }
 

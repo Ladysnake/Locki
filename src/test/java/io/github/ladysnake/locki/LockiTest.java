@@ -18,25 +18,27 @@
 package io.github.ladysnake.locki;
 
 import net.minecraft.util.Identifier;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LockiTest {
     private static final Locki instance = new Locki();
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpGlobal() {
         instance.onInitialize(null);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Locki.reset(s -> s.contains("test"));
     }
@@ -66,7 +68,7 @@ public class LockiTest {
         Identifier b = new Identifier("test", "b");
         InventoryLock lock = Locki.registerLock(a);
         assertEquals(lock, Locki.getLock(a));
-        assertNull(Locki.getLock(b));
+        Assertions.assertNull(Locki.getLock(b));
     }
 
     @Test
@@ -75,8 +77,8 @@ public class LockiTest {
         assertThrows(NullPointerException.class, () -> Locki.registerNode(DefaultInventoryNodes.INVENTORY, null));
         assertThrows(NullPointerException.class, () -> Locki.registerNode(null, "test-a"));
         assertThrows(IllegalArgumentException.class, () -> Locki.registerNode(DefaultInventoryNodes.INVENTORY, "test-a.b"));
-        assertNull("registering an invalid node has side effects", Locki.getNode("test-a.b"));
-        assertNull("registering an invalid node has side effects", Locki.getNode(null));
+        Assertions.assertNull(Locki.getNode("test-a.b"), "registering an invalid node has side effects");
+        Assertions.assertNull(Locki.getNode(null), "registering an invalid node has side effects");
         assertEquals("inventory.main.test-a", Locki.registerNode(DefaultInventoryNodes.MAIN_INVENTORY, "test-a").getFullName());
     }
 
@@ -84,6 +86,6 @@ public class LockiTest {
     public void getNode() {
         InventoryNode node = Locki.registerNode(DefaultInventoryNodes.ARMOR, "test-b");
         assertEquals(node, Locki.getNode("inventory.armor.test-b"));
-        assertNull(Locki.getNode("inventory.armor.test-a"));
+        Assertions.assertNull(Locki.getNode("inventory.armor.test-a"));
     }
 }
