@@ -1,7 +1,7 @@
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-	id 'io.github.ladysnake.chenille' version '0.10.0'
+	id 'io.github.ladysnake.chenille' version '0.10.1'
 	id 'maven-publish'
 }
 
@@ -121,6 +121,7 @@ chenille {
 		mainArtifact = remapStandaloneJar.archiveFile
 		withArtifactory()
 		withCurseforgeRelease()
+		withModrinthRelease()
 		withGithubRelease()
 	}
 }
