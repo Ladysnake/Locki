@@ -21,7 +21,7 @@ import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryKeeper;
 import io.github.ladysnake.locki.impl.PlayerInventoryKeeper;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
-import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.network.packet.c2s.play.SelectedSlotUpdateC2SPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,8 +35,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Shadow
     public ServerPlayerEntity player;
 
-    @Inject(method = "onUpdateSelectedSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/c2s/play/UpdateSelectedSlotC2SPacket;getSelectedSlot()I", ordinal = 0))
-    private void fixSelectedSlot(UpdateSelectedSlotC2SPacket packet, CallbackInfo ci) {
+    @Inject(method = "onSelectedSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/c2s/play/SelectedSlotUpdateC2SPacket;getSelectedSlot()I", ordinal = 0))
+    private void fixSelectedSlot(SelectedSlotUpdateC2SPacket packet, CallbackInfo ci) {
         ((UpdateSelectedSlotC2SPacketAccessor) packet).locki$setSelectedSlot(PlayerInventoryKeeper.fixSelectedSlot(player, packet.getSelectedSlot()));
     }
 
