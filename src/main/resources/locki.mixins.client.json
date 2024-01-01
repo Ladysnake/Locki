@@ -2,15 +2,15 @@
   "required": true,
   "minVersion": "0.8",
   "package": "io.github.ladysnake.locki.impl.mixin.client",
-  "plugin": "io.github.ladysnake.locki.impl.LockiClientMixinPlugin",
+  "plugin": "org.ladysnake.locki.impl.LockiClientMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ClientPlayerInteractionManagerMixin",
-    "HandledScreenMixin",
     "InGameHudMixin",
-    "InventoryScreenMixin",
-    "MinecraftClientMixin",
-    "RecipeBookWidgetMixin"
+    "org.ladysnake.ladysnake.locki.impl.mixin.client.ClientPlayerInteractionManagerMixin",
+    "org.ladysnake.ladysnake.locki.impl.mixin.client.HandledScreenMixin",
+    "org.ladysnake.ladysnake.locki.impl.mixin.client.InventoryScreenMixin",
+    "org.ladysnake.ladysnake.locki.impl.mixin.client.MinecraftClientMixin",
+    "org.ladysnake.ladysnake.locki.impl.mixin.client.RecipeBookWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

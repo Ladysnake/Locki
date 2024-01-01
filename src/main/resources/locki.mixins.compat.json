@@ -1,9 +1,9 @@
 {
   "parent": "locki.mixins.common.json",
   "package": "io.github.ladysnake.locki.impl.compat.mixin",
-  "plugin": "io.github.ladysnake.locki.impl.compat.LockiCompatMixinPlugin",
+  "plugin": "org.ladysnake.locki.impl.compat.LockiCompatMixinPlugin",
   "mixins": [
-    "backslot.SwitchPacketMixin"
+    "org.ladysnake.ladysnake.locki.impl.compat.mixin.backslot.SwitchPacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1
