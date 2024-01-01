@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "quilt_loader": {
-    "group": "io.github.ladysnake",
+    "group": "org.ladysnake",
     "id": "locki",
     "version": "${version}",
     "metadata": {
@@ -21,13 +21,13 @@
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
       "init": [
-        "io.github.ladysnake.locki.Locki"
+        "org.ladysnake.locki.Locki"
       ],
       "client_init": [
-        "io.github.ladysnake.locki.impl.LockiClient"
+        "org.ladysnake.locki.impl.LockiClient"
       ],
       "cardinal-components": [
-        "io.github.ladysnake.locki.impl.LockiComponents"
+        "org.ladysnake.locki.impl.LockiComponents"
       ]
     },
     "depends": [
@@ -55,7 +55,7 @@
   "quilt_loom": {
     "injected_interfaces": {
       "net/minecraft/class_1661": [
-        "io/github/ladysnake/locki/InventoryKeeper"
+        "org/ladysnake/locki/InventoryKeeper"
       ]
     }
   }

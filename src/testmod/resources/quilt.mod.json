@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "quilt_loader": {
-    "group": "io.github.ladysnake",
+    "group": "org.ladysnake",
     "id": "lockii",
     "version": "${version}",
     "metadata": {
@@ -20,10 +20,10 @@
     },
     "entrypoints": {
       "init": [
-        "io.github.ladysnake.lockii.Lockii"
+        "org.ladysnake.lockii.Lockii"
       ],
       "quilt:game_test": [
-        "io.github.ladysnake.lockii.tests.LockiTestSuite"
+        "org.ladysnake.lockii.tests.LockiTestSuite"
       ]
     },
     "depends": [

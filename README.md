@@ -51,9 +51,10 @@ You can add the library by inserting the following in your `build.gradle` :
 repositories {
 	maven { 
         name = "Ladysnake Mods"
-        url = "https://ladysnake.jfrog.io/artifactory/mods"
+        url = "https://maven.ladysnake.org/releases"
         content {
             includeGroup 'io.github.ladysnake'
+            includeGroup 'org.ladysnake'
             includeGroupByRegex '(dev|io\\.github)\\.onyxstudios.*'
         }
     }
@@ -64,8 +65,8 @@ repositories {
 }
 
 dependencies {
-    modImplementation "io.github.ladysnake:locki:${locki_version}"
-    include "io.github.ladysnake:locki:${locki_version}"
+    modImplementation "org.ladysnake:locki:${locki_version}"
+    include "org.ladysnake:locki:${locki_version}"
     // locki dependencies
     include "me.lucko:fabric-permissions-api:${fpa_version}"
     include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}"
