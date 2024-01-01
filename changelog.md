@@ -1,4 +1,16 @@
 ------------------------------------------------------
+Version 0.11.0
+------------------------------------------------------
+Updated to 1.20.1
+
+**Changes**
+- **BREAKING (for modders) :** The maven group and package are now
+  `org.ladysnake` instead of `io.github.ladysnake`
+
+**Fixes**
+- Players can no longer drop their held item when their main hand is locked
+
+------------------------------------------------------
 Version 0.10.0
 ------------------------------------------------------
 Updated to 1.19.4
