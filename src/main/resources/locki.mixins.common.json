@@ -11,6 +11,7 @@
     "PlayerInventoryMixin",
     "PlayerScreenHandlerAccessor",
     "ScreenHandlerMixin",
+    "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "SlotMixin",
     "UpdateSelectedSlotC2SPacketAccessor",

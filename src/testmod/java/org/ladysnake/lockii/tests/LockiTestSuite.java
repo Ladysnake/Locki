@@ -20,6 +20,8 @@ package org.ladysnake.lockii.tests;
 import io.github.ladysnake.elmendorf.GameTestUtil;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.test.GameTest;
@@ -76,6 +78,25 @@ public class LockiTestSuite implements QuiltGameTest {
         ctx.expectEntity(EntityType.ITEM);
         player.playerTick();
         ctx.expectEntity(EntityType.ITEM);
+        ctx.complete();
+    }
+
+    @GameTest(structureName = EMPTY_STRUCTURE)
+    public void lockingPreventsDropFromMainHand(QuiltTestContext ctx) {
+        ServerPlayerEntity player = ctx.spawnServerPlayer(1, 0, 1);
+        player.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
+        player.getInventory().addLock(lock, DefaultInventoryNodes.MAIN_HAND);
+        player.dropSelectedItem(true);
+        GameTestUtil.assertTrue(
+                "Selected item should not be dropped when main hand is locked",
+                player.getMainHandStack().getItem() == Items.ENCHANTED_GOLDEN_APPLE
+        );
+        player.getInventory().removeLock(lock, DefaultInventoryNodes.MAIN_HAND);
+        player.dropSelectedItem(true);
+        GameTestUtil.assertTrue(
+                "Selected item should be dropped when main hand is not locked",
+                player.getMainHandStack().isEmpty()
+        );
         ctx.complete();
     }
 
