@@ -36,3 +36,5 @@ logs/
 # quilt
 
 .quilt
+.cache
+config
