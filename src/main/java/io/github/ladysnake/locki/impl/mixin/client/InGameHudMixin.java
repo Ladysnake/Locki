@@ -20,8 +20,8 @@ package io.github.ladysnake.locki.impl.mixin.client;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryKeeper;
 import io.github.ladysnake.locki.impl.PlayerInventoryKeeper;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,7 +53,7 @@ public abstract class InGameHudMixin {
         at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/InGameHud;WIDGETS_TEXTURE:Lnet/minecraft/util/Identifier;"),
         cancellable = true
     )
-    private void checkInventoryLimit(float tickDelta, MatrixStack matrices, CallbackInfo ci) {
+    private void checkInventoryLimit(float tickDelta, GuiGraphics graphics, CallbackInfo ci) {
         this.renderMainHandOnly = false;
         InventoryKeeper inventoryKeeper = InventoryKeeper.get(this.getCameraPlayer());
         if (inventoryKeeper.isLocked(DefaultInventoryNodes.MAIN_HAND)) {
@@ -73,7 +73,7 @@ public abstract class InGameHudMixin {
 
     @ModifyArg(
         method = "renderHotbar",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V", ordinal = 0),
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 0),
         index = 1
     )
     private int centerCroppedHotbar(int x) {
@@ -85,7 +85,7 @@ public abstract class InGameHudMixin {
 
     @ModifyArg(
         method = "renderHotbar",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V", ordinal = 1),
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 1),
         index = 1
     )
     private int centerSelectedSlot(int x) {
@@ -97,7 +97,7 @@ public abstract class InGameHudMixin {
 
     @ModifyArg(
         method = "renderHotbar",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V", ordinal = 0),
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V", ordinal = 0),
         index = 5
     )
     private int cropHotbar_width(int width) {
@@ -126,7 +126,7 @@ public abstract class InGameHudMixin {
             from = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"),
             to = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 1)
         ),
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/util/math/MatrixStack;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V")
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V")
     )
     private ItemStack cancelLockedItemRender(ItemStack stack) {
         if (this.cancelNextItem) {
@@ -141,7 +141,7 @@ public abstract class InGameHudMixin {
             from = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"),
             to = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 1)
         ),
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/util/math/MatrixStack;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"),
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"),
         index = 1
     )
     private int shiftMainHandItem(int x) {

@@ -64,7 +64,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
 
     @Override
     protected Map<InventoryNode, Reference2BooleanMap<InventoryLock>> getLocks() {
-        Preconditions.checkState(!this.player.world.isClient, "Locks can only be managed serverside (check !world.isClient)");
+        Preconditions.checkState(!this.player.getWorld().isClient, "Locks can only be managed serverside (check !world.isClient)");
         return super.getLocks();
     }
 

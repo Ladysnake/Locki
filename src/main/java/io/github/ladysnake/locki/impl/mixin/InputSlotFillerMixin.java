@@ -17,6 +17,8 @@
  */
 package io.github.ladysnake.locki.impl.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryKeeper;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -28,17 +30,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(InputSlotFiller.class)
 public abstract class InputSlotFillerMixin {
     @Shadow protected AbstractRecipeScreenHandler<?> handler;
 
-    @Redirect(method = "fillInputSlots(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/recipe/Recipe;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeMatcher;match(Lnet/minecraft/recipe/Recipe;Lit/unimi/dsi/fastutil/ints/IntList;)Z"))
-    private boolean blockInventoryCrafting(RecipeMatcher recipeFinder, Recipe<?> recipe, IntList outMatchingInputIds, ServerPlayerEntity entity) {
+    @WrapOperation(method = "fillInputSlots(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/recipe/Recipe;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeMatcher;match(Lnet/minecraft/recipe/Recipe;Lit/unimi/dsi/fastutil/ints/IntList;)Z"))
+    private boolean blockInventoryCrafting(RecipeMatcher instance, Recipe<?> recipe, IntList output, Operation<Boolean> original, ServerPlayerEntity entity) {
         if (this.handler == entity.playerScreenHandler && InventoryKeeper.get(entity).isLocked(DefaultInventoryNodes.CRAFTING_GRID)) {
             return false;
         }
-        return recipeFinder.match(recipe, outMatchingInputIds);
+        return original.call(instance, recipe, output);
     }
 }

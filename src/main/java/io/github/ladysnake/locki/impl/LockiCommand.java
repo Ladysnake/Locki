@@ -102,9 +102,9 @@ public final class LockiCommand {
     private static void sendFeedback(ServerCommandSource source, ServerPlayerEntity player, InventoryNode invNode, String command) {
         String name = invNode.getFullName();
         if (source.getEntity() == player) {
-            source.sendFeedback(Text.translatable("locki:commands." + command + ".success.self", name), true);
+            source.sendFeedback(() -> Text.translatable("locki:commands." + command + ".success.self", name), true);
         } else {
-            source.sendFeedback(Text.translatable("locki:commands." + command + ".success.other", player.getDisplayName(), name), true);
+            source.sendFeedback(() -> Text.translatable("locki:commands." + command + ".success.other", player.getDisplayName(), name), true);
         }
     }
 }

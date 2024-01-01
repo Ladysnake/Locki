@@ -17,6 +17,7 @@
  */
 package io.github.ladysnake.lockii.tests;
 
+import io.github.ladysnake.elmendorf.GameTestUtil;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.InventoryNode;
@@ -34,8 +35,6 @@ import org.quiltmc.qsl.testing.api.game.QuiltGameTest;
 import org.quiltmc.qsl.testing.api.game.QuiltTestContext;
 
 import static io.github.ladysnake.elmendorf.ByteBufChecker.any;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class LockiTestSuite implements QuiltGameTest {
     public static final InventoryLock lock = Locki.registerLock(Lockii.id("test_suite"));
@@ -44,16 +43,28 @@ public class LockiTestSuite implements QuiltGameTest {
     public void checkPermission(TestContext ctx) {
         ServerPlayerEntity player = ctx.spawnServerPlayer(0, 0, 0);
 
-        assertTrue(Permissions.check(player, "locki.access.inventory", true));
+        GameTestUtil.assertTrue(
+                "New player can access their whole inventory",
+                Permissions.check(player, "locki.access.inventory", true)
+        );
         InventoryLock lock = Locki.registerLock(new Identifier("test", "test"));
         InventoryNode node = Locki.registerNode(InventoryNode.ROOT, "test");
         Locki.registerNode(node, "child");
         Locki.registerNode(InventoryNode.ROOT, "test-foo");
         player.getInventory().addLock(lock, node);
 
-        assertFalse(Permissions.check(player, "locki.access.test", true));
-        assertFalse(Permissions.check(player, "locki.access.test.child", true));
-        assertTrue(Permissions.check(player, "locki.access.test-foo", true));
+        GameTestUtil.assertFalse(
+                "Player cannot access locked slot",
+                Permissions.check(player, "locki.access.test", true)
+        );
+        GameTestUtil.assertFalse(
+                "Player cannot access descendant of locked slot",
+                Permissions.check(player, "locki.access.test.child", true)
+        );
+        GameTestUtil.assertTrue(
+                "Player can access siblings of locked slot",
+                Permissions.check(player, "locki.access.test-foo", true)
+        );
         ctx.complete();
     }
 

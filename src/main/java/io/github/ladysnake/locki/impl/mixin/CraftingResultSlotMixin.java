@@ -19,8 +19,8 @@ package io.github.ladysnake.locki.impl.mixin;
 
 import io.github.ladysnake.locki.InventoryKeeper;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.CraftingResultSlot;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CraftingResultSlot.class)
 public abstract class CraftingResultSlotMixin extends SlotMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void constructor(PlayerEntity player, CraftingInventory input, Inventory inventory, int index, int x, int y, CallbackInfo ci) {
+    private void constructor(PlayerEntity player, RecipeInputInventory input, Inventory inventory, int index, int x, int y, CallbackInfo ci) {
         if (player != null && ((CraftingInventoryAccessor) input).locki$getHandler() instanceof PlayerScreenHandler) {
             this.locki$keeper = InventoryKeeper.get(player);
         }
