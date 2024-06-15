@@ -17,11 +17,11 @@
  */
 package org.ladysnake.locki.impl.mixin;
 
-import net.minecraft.network.packet.s2c.play.SelectedSlotUpdateS2CPacket;
+import net.minecraft.network.packet.c2s.play.SelectedSlotUpdateC2SPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(SelectedSlotUpdateS2CPacket.class)
+@Mixin(SelectedSlotUpdateC2SPacket.class)
 public interface UpdateSelectedSlotC2SPacketAccessor {
     @Accessor("selectedSlot")
     void locki$setSelectedSlot(int selectedSlot);

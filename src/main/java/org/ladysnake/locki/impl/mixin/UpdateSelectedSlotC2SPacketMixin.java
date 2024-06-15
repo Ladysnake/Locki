@@ -17,13 +17,13 @@
  */
 package org.ladysnake.locki.impl.mixin;
 
-import net.minecraft.network.packet.s2c.play.SelectedSlotUpdateS2CPacket;
+import net.minecraft.network.packet.c2s.play.SelectedSlotUpdateC2SPacket;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(SelectedSlotUpdateS2CPacket.class)
+@Mixin(SelectedSlotUpdateC2SPacket.class)
 public class UpdateSelectedSlotC2SPacketMixin {
     @SuppressWarnings("unused") // only there to make selectedSlot mutable - for use by the accessor
     @Shadow @Mutable @Final private int selectedSlot;
