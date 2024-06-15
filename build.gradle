@@ -126,3 +126,7 @@ chenille {
 		withGithubRelease()
 	}
 }
+
+modrinth {
+	loaders = ['quilt']
+}
