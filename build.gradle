@@ -1,7 +1,8 @@
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-	id 'io.github.ladysnake.chenille' version '0.11.3'
+	id 'org.quiltmc.loom' version '1.6.+'
+	id 'io.github.ladysnake.chenille' version '0.13.0'
 	id 'maven-publish'
 }
 
