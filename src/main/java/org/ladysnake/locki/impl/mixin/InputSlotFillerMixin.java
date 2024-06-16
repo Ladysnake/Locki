@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(InputSlotFiller.class)
 public abstract class InputSlotFillerMixin {
-    @Shadow protected AbstractRecipeScreenHandler<?> handler;
+    @Shadow protected AbstractRecipeScreenHandler<?, ?> handler;
 
     @WrapOperation(method = "fillInputSlots(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/recipe/RecipeHolder;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeMatcher;match(Lnet/minecraft/recipe/Recipe;Lit/unimi/dsi/fastutil/ints/IntList;)Z"))
     private boolean blockInventoryCrafting(RecipeMatcher instance, Recipe<?> recipe, IntList output, Operation<Boolean> original, ServerPlayerEntity entity) {

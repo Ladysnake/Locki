@@ -17,15 +17,15 @@
  */
 package org.ladysnake.locki.impl;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
-import net.minecraft.util.Identifier;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
+import org.ladysnake.locki.Locki;
 
 public final class LockiComponents implements EntityComponentInitializer {
-    public static final ComponentKey<InventoryKeeperBase> INVENTORY_KEEPER = ComponentRegistry.getOrCreate(new Identifier("locki", "inventory_keeper"), InventoryKeeperBase.class);
+    public static final ComponentKey<InventoryKeeperBase> INVENTORY_KEEPER = ComponentRegistry.getOrCreate(Locki.id("inventory_keeper"), InventoryKeeperBase.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {

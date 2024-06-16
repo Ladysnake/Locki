@@ -27,10 +27,10 @@ import net.minecraft.util.Identifier;
 import org.ladysnake.locki.DefaultInventoryNodes;
 import org.ladysnake.locki.InventoryLockingChangeCallback;
 import org.ladysnake.locki.InventoryNode;
-import org.quiltmc.loader.api.ModContainer;
+import org.ladysnake.locki.Locki;
 
 public class LockiClient implements ClientModInitializer {
-    public static final Identifier LOCKED_SLOT_SPRITE = new Identifier("locki", "gui/locked_slot");
+    public static final Identifier LOCKED_SLOT_SPRITE = Locki.id("gui/locked_slot");
 
     private static void updateCraftingBookVisibility(PlayerEntity player, InventoryNode invNode, boolean locked) {
         MinecraftClient mc = MinecraftClient.getInstance();

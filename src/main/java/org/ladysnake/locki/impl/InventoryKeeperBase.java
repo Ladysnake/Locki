@@ -17,14 +17,15 @@
  */
 package org.ladysnake.locki.impl;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.HolderLookup;
 import net.minecraft.util.Identifier;
+import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.locki.InventoryKeeper;
 import org.ladysnake.locki.InventoryLock;
 import org.ladysnake.locki.InventoryNode;
@@ -142,7 +143,7 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, HolderLookup.Provider registryLookup) {
         if (tag.contains("locks", NbtElement.COMPOUND_TYPE)) {
             this.clearCache();
             this.getLocks().clear();
@@ -169,7 +170,7 @@ public class InventoryKeeperBase implements Component, InventoryKeeper {
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(NbtCompound tag, HolderLookup.Provider registryLookup) {
         NbtCompound dict = new NbtCompound();
         for (Map.Entry<InventoryNode, Reference2BooleanMap<InventoryLock>> nodeEntry : this.getLocks().entrySet()) {
             NbtList list = new NbtList();

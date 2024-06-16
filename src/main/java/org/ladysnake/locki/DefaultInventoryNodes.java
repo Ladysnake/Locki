@@ -62,6 +62,7 @@ public final class DefaultInventoryNodes {
             case LEGS -> LEGS;
             case CHEST -> CHEST;
             case HEAD -> HEAD;
+            case BODY -> MAIN_INVENTORY;
         };
     }
 

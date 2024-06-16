@@ -40,7 +40,7 @@ if (Permissions.check(player, "locki.access.inventory.armor.head", true)) {
     // nothing is locking the head slot
 }
 ```
-For a list of default inventory nodes, see [DefaultInventoryNodes.java](src/main/java/io/github/ladysnake/locki/DefaultInventoryNodes.java).
+For a list of default inventory nodes, see [DefaultInventoryNodes.java](src/main/java/org/ladysnake/locki/DefaultInventoryNodes.java).
 Simply prepend the desired node's full path with `locki.access.` before checking.
 
 ## Adding Locki to your project
@@ -69,8 +69,8 @@ dependencies {
     include "org.ladysnake:locki:${locki_version}"
     // locki dependencies
     include "me.lucko:fabric-permissions-api:${fpa_version}"
-    include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}"
-    include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}"
+    include "org.ladysnake.cardinal-components-api:cardinal-components-base:${cca_version}"
+    include "org.ladysnake.cardinal-components-api:cardinal-components-entity:${cca_version}"
 }
 ```
 

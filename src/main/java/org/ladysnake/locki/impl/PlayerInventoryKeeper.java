@@ -19,12 +19,12 @@ package org.ladysnake.locki.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.locki.DefaultInventoryNodes;
 import org.ladysnake.locki.InventoryKeeper;
 import org.ladysnake.locki.InventoryLock;
@@ -74,7 +74,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     }
 
     @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(RegistryByteBuf buf, ServerPlayerEntity recipient) {
         buf.writeVarInt(this.cache.size());
         for (Map.Entry<InventoryNode, BitSet> entry : this.getCache().entrySet()) {
             // Could compress this by not repeating ancestors?
@@ -84,7 +84,7 @@ public class PlayerInventoryKeeper extends InventoryKeeperBase implements AutoSy
     }
 
     @Override
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(RegistryByteBuf buf) {
         int size = buf.readVarInt();
         this.clearCache();
         for (int i = 0; i < size; i++) {

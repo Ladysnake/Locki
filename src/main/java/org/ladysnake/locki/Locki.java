@@ -19,13 +19,11 @@ package org.ladysnake.locki;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import me.lucko.fabric.api.permissions.v0.PermissionCheckEvent;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.argument.SingletonArgumentInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,8 +50,13 @@ import java.util.stream.Stream;
  * @see #registerNode(InventoryNode, String)
  */
 public final class Locki implements ModInitializer {
+    public static final String MOD_ID = "locki";
     public static final Logger LOGGER = LogManager.getLogger("Locki");
     public static final Pattern NODE_NAME_PART = Pattern.compile("[a-z0-9_-]+");
+
+    public static Identifier id(String path) {
+        return Identifier.of(MOD_ID, path);
+    }
 
     private static final Map<Identifier, InventoryLock> locks = new HashMap<>();
     private static final Map<String, InventoryNode> nodes = new HashMap<>();
@@ -154,8 +157,8 @@ public final class Locki implements ModInitializer {
     @Override
     public void onInitialize() {
         this.baseInit();
-        ArgumentTypeRegistry.registerArgumentType(new Identifier("locki", "inventory_lock"), InventoryLockArgumentType.class, SingletonArgumentInfo.contextFree(InventoryLockArgumentType::inventoryLock));
-        ArgumentTypeRegistry.registerArgumentType(new Identifier("locki", "inventory_node"), InventoryNodeArgumentType.class, SingletonArgumentInfo.contextFree(InventoryNodeArgumentType::inventoryNode));
+        ArgumentTypeRegistry.registerArgumentType(id("inventory_lock"), InventoryLockArgumentType.class, SingletonArgumentInfo.contextFree(InventoryLockArgumentType::inventoryLock));
+        ArgumentTypeRegistry.registerArgumentType(id("inventory_node"), InventoryNodeArgumentType.class, SingletonArgumentInfo.contextFree(InventoryNodeArgumentType::inventoryNode));
     }
 
     void baseInit() {

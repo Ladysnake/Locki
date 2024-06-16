@@ -25,11 +25,12 @@ import net.minecraft.util.Identifier;
 
 public final class Lockii implements ModInitializer {
     public static Identifier id(String path) {
-        return new Identifier("lockii", path);
+        return Identifier.of("lockii", path);
     }
 
     @Override
     public void onInitialize() {
-        Registry.register(Registries.ITEM, id("inventory_lock"), new InventoryLockItem(new Item.Settings()));
+        Registry.register(Registries.DATA_COMPONENT_TYPE, id("debug"), InventoryLockComponent.TYPE);
+        Registry.register(Registries.ITEM, id("inventory_lock"), new InventoryLockItem(new Item.Settings().component(InventoryLockComponent.TYPE, InventoryLockComponent.DEFAULT)));
     }
 }

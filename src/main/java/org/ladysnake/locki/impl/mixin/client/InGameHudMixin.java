@@ -19,6 +19,7 @@ package org.ladysnake.locki.impl.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.class_9779;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.hud.in_game.InGameHud;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,12 +55,12 @@ public abstract class InGameHudMixin {
     protected abstract PlayerEntity getCameraPlayer();
 
     @Inject(
-        method = "renderHotbar",
+        method = "renderSurvivalHotbar",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;push()V"),
         allow = 1,
         cancellable = true
     )
-    private void checkInventoryLimit(float tickDelta, GuiGraphics graphics, CallbackInfo ci) {
+    private void checkInventoryLimit(GuiGraphics graphics, class_9779 arg, CallbackInfo ci) {
         this.renderMainHandOnly = false;
         InventoryKeeper inventoryKeeper = InventoryKeeper.get(this.getCameraPlayer());
         if (inventoryKeeper.isLocked(DefaultInventoryNodes.MAIN_HAND)) {
@@ -69,7 +70,7 @@ public abstract class InGameHudMixin {
         }
     }
 
-    @ModifyVariable(method = "renderHotbar", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerEntity;getOffHandStack()Lnet/minecraft/item/ItemStack;"))
+    @ModifyVariable(method = "renderSurvivalHotbar", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerEntity;getOffHandStack()Lnet/minecraft/item/ItemStack;"))
     private ItemStack lockOffHand(ItemStack base) {
         if (InventoryKeeper.get(this.getCameraPlayer()).isLocked(DefaultInventoryNodes.OFF_HAND)) {
             return ItemStack.EMPTY;
@@ -78,7 +79,7 @@ public abstract class InGameHudMixin {
     }
 
     @WrapOperation(
-        method = "renderHotbar",
+        method = "renderSurvivalHotbar",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 0)
     )
     private void centerCroppedHotbar(GuiGraphics instance, Identifier texture, int x, int y, int width, int height, Operation<Void> original) {
@@ -93,7 +94,7 @@ public abstract class InGameHudMixin {
     }
 
     @ModifyArg(
-        method = "renderHotbar",
+        method = "renderSurvivalHotbar",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V", ordinal = 1),
         index = 1
     )
@@ -105,7 +106,7 @@ public abstract class InGameHudMixin {
     }
 
     @ModifyArg(
-        method = "renderHotbar",
+        method = "renderSurvivalHotbar",
         slice = @Slice(
             from = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"),
             to = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 1)
@@ -118,12 +119,12 @@ public abstract class InGameHudMixin {
     }
 
     @ModifyArg(
-        method = "renderHotbar",
+        method = "renderSurvivalHotbar",
         slice = @Slice(
             from = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"),
             to = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 1)
         ),
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/in_game/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V")
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/in_game/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/class_9779;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V")
     )
     private ItemStack cancelLockedItemRender(ItemStack stack) {
         if (this.cancelNextItem) {
@@ -133,12 +134,12 @@ public abstract class InGameHudMixin {
     }
 
     @ModifyArg(
-        method = "renderHotbar",
+        method = "renderSurvivalHotbar",
         slice = @Slice(
             from = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"),
             to = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 1)
         ),
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/in_game/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"),
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/in_game/InGameHud;renderHotbarItem(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/class_9779;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;I)V"),
         index = 1
     )
     private int shiftMainHandItem(int x) {

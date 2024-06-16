@@ -22,7 +22,6 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.ladysnake.locki.InventoryLock;
 import org.ladysnake.locki.InventoryNode;
 import org.ladysnake.locki.Locki;
@@ -38,7 +37,7 @@ import static org.ladysnake.locki.impl.InventoryLockArgumentType.getInventoryLoc
 import static org.ladysnake.locki.impl.InventoryLockArgumentType.inventoryLock;
 
 public final class LockiCommand {
-    public static final InventoryLock COMMAND_LOCK = Locki.registerLock(new Identifier("locki", "commands"), true);
+    public static final InventoryLock COMMAND_LOCK = Locki.registerLock(Locki.id("commands"), true);
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal("locki")

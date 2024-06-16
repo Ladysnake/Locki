@@ -20,14 +20,14 @@ chenille {
 	}
 
 	license = 'LGPL'
-	javaVersion = 17
+	javaVersion = 21
 }
 
 repositories {
 	mavenCentral()
 	mavenLocal()
 	chenille.repositories {
-		cursemaven()
+		modrinth()
 		ladysnake()
 		lucko()
 		jitpack()
@@ -54,13 +54,13 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	modIncludeImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}") { transitive = false }
-	modIncludeImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}") { transitive = false }
+	modIncludeImplementation ("org.ladysnake.cardinal-components-api:cardinal-components-base:${cca_version}") { transitive = false }
+	modIncludeImplementation ("org.ladysnake.cardinal-components-api:cardinal-components-entity:${cca_version}") { transitive = false }
 	modIncludeImplementation "me.lucko:fabric-permissions-api:${fpa_version}"
 
 	compileOnly "com.demonwav.mcdev:annotations:1.0"
 
-	modCompileOnly "curse.maven:backslot-402739:${backslot_version}"	// not updated yet
+	modCompileOnly "maven.modrinth:backslot:${backslot_version}"	// not updated yet
 	modLocalRuntime ("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") { transitive = false }
 
 	modLocalRuntime ("com.terraformersmc:modmenu:${modmenu_version}") { transitive = false }

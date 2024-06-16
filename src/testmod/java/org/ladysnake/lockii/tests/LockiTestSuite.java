@@ -34,6 +34,7 @@ import org.ladysnake.locki.InventoryNode;
 import org.ladysnake.locki.Locki;
 import org.ladysnake.locki.impl.LockiComponents;
 import org.ladysnake.lockii.Lockii;
+
 import static org.ladysnake.elmendorf.ByteBufChecker.any;
 
 public class LockiTestSuite implements FabricGameTest {
@@ -47,7 +48,7 @@ public class LockiTestSuite implements FabricGameTest {
                 "New player can access their whole inventory",
                 Permissions.check(player, "locki.access.inventory", true)
         );
-        InventoryLock lock = Locki.registerLock(new Identifier("test", "test"));
+        InventoryLock lock = Locki.registerLock(Identifier.of("test", "test"));
         InventoryNode node = Locki.registerNode(InventoryNode.ROOT, "test");
         Locki.registerNode(node, "child");
         Locki.registerNode(InventoryNode.ROOT, "test-foo");
