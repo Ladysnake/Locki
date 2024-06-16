@@ -35,7 +35,7 @@ public class LockiTest {
 
     @BeforeAll
     public static void setUpGlobal() {
-        instance.onInitialize(null);
+        instance.baseInit();
     }
 
     @BeforeEach

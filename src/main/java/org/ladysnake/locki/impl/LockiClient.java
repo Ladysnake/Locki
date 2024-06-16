@@ -17,6 +17,7 @@
  */
 package org.ladysnake.locki.impl;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.recipe_book.RecipeBookProvider;
@@ -27,7 +28,6 @@ import org.ladysnake.locki.DefaultInventoryNodes;
 import org.ladysnake.locki.InventoryLockingChangeCallback;
 import org.ladysnake.locki.InventoryNode;
 import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
 public class LockiClient implements ClientModInitializer {
     public static final Identifier LOCKED_SLOT_SPRITE = new Identifier("locki", "gui/locked_slot");
@@ -52,7 +52,7 @@ public class LockiClient implements ClientModInitializer {
     }
 
     @Override
-    public void onInitializeClient(ModContainer mod) {
+    public void onInitializeClient() {
         InventoryLockingChangeCallback.EVENT.register(LockiClient::updateCraftingBookVisibility);
     }
 }

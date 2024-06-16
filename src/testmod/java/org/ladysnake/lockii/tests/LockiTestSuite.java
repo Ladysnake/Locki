@@ -18,6 +18,7 @@
 package org.ladysnake.lockii.tests;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -33,12 +34,9 @@ import org.ladysnake.locki.InventoryNode;
 import org.ladysnake.locki.Locki;
 import org.ladysnake.locki.impl.LockiComponents;
 import org.ladysnake.lockii.Lockii;
-import org.quiltmc.qsl.testing.api.game.QuiltGameTest;
-import org.quiltmc.qsl.testing.api.game.QuiltTestContext;
-
 import static org.ladysnake.elmendorf.ByteBufChecker.any;
 
-public class LockiTestSuite implements QuiltGameTest {
+public class LockiTestSuite implements FabricGameTest {
     public static final InventoryLock lock = Locki.registerLock(Lockii.id("test_suite"));
 
     @GameTest(structureName = EMPTY_STRUCTURE)
@@ -71,7 +69,7 @@ public class LockiTestSuite implements QuiltGameTest {
     }
 
     @GameTest(structureName = EMPTY_STRUCTURE)
-    public void lockingPreventsItemPickup(QuiltTestContext ctx) {
+    public void lockingPreventsItemPickup(TestContext ctx) {
         ServerPlayerEntity player = ctx.spawnServerPlayer(1, 0, 1);
         player.getInventory().addLock(lock, DefaultInventoryNodes.INVENTORY);
         ctx.spawnItemEntity(Items.DIAMOND, 1, 1, 2);
@@ -82,7 +80,7 @@ public class LockiTestSuite implements QuiltGameTest {
     }
 
     @GameTest(structureName = EMPTY_STRUCTURE)
-    public void lockingPreventsDropFromMainHand(QuiltTestContext ctx) {
+    public void lockingPreventsDropFromMainHand(TestContext ctx) {
         ServerPlayerEntity player = ctx.spawnServerPlayer(1, 0, 1);
         player.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
         player.getInventory().addLock(lock, DefaultInventoryNodes.MAIN_HAND);
@@ -101,7 +99,7 @@ public class LockiTestSuite implements QuiltGameTest {
     }
 
     @GameTest(structureName = EMPTY_STRUCTURE)
-    public void itemPickupWorks(QuiltTestContext ctx) {
+    public void itemPickupWorks(TestContext ctx) {
         ServerPlayerEntity player = ctx.spawnServerPlayer(1, 0, 1);
         ctx.spawnItemEntity(Items.REDSTONE, 1, 1, 1);
         ctx.expectEntity(EntityType.ITEM);

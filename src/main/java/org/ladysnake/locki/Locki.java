@@ -21,6 +21,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import me.lucko.fabric.api.permissions.v0.PermissionCheckEvent;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.argument.SingletonArgumentInfo;
@@ -35,10 +38,6 @@ import org.jetbrains.annotations.Nullable;
 import org.ladysnake.locki.impl.InventoryLockArgumentType;
 import org.ladysnake.locki.impl.InventoryNodeArgumentType;
 import org.ladysnake.locki.impl.LockiCommand;
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
-import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
-import org.quiltmc.qsl.command.api.ServerArgumentType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -153,14 +152,15 @@ public final class Locki implements ModInitializer {
     }
 
     @Override
-    public void onInitialize(ModContainer mod) {
+    public void onInitialize() {
+        this.baseInit();
+        ArgumentTypeRegistry.registerArgumentType(new Identifier("locki", "inventory_lock"), InventoryLockArgumentType.class, SingletonArgumentInfo.contextFree(InventoryLockArgumentType::inventoryLock));
+        ArgumentTypeRegistry.registerArgumentType(new Identifier("locki", "inventory_node"), InventoryNodeArgumentType.class, SingletonArgumentInfo.contextFree(InventoryNodeArgumentType::inventoryNode));
+    }
+
+    void baseInit() {
         DefaultInventoryNodes.init();
         ModdedInventoryNodes.init();
-
-        if (mod != null) { // Unit testing
-            ServerArgumentType.register(new Identifier("locki", "inventory_lock"), InventoryLockArgumentType.class, SingletonArgumentInfo.contextFree(InventoryLockArgumentType::inventoryLock), t -> IdentifierArgumentType.identifier());
-            ServerArgumentType.register(new Identifier("locki", "inventory_node"), InventoryNodeArgumentType.class, SingletonArgumentInfo.contextFree(InventoryNodeArgumentType::inventoryNode), t -> StringArgumentType.string());
-        }
 
         CommandRegistrationCallback.EVENT.register((dispatcher, ctx, dedicated) -> LockiCommand.register(dispatcher));
         PermissionCheckEvent.EVENT.register((source, permission) -> {

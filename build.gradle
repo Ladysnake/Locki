@@ -52,7 +52,7 @@ dependencies {
 	mappings "org.quiltmc:quilt-mappings:${minecraft_version}+build.${quilt_mappings}:intermediary-v2"
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 
-	modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${quilted_fabric_api_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	modIncludeImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}") { transitive = false }
 	modIncludeImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}") { transitive = false }

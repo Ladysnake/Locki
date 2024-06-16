@@ -19,10 +19,10 @@
       }
     },
     "entrypoints": {
-      "init": [
+      "main": [
         "org.ladysnake.lockii.Lockii"
       ],
-      "quilt:game_test": [
+      "fabric-gametest": [
         "org.ladysnake.lockii.tests.LockiTestSuite"
       ]
     },
