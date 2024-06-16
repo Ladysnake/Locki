@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class InputSlotFillerMixin {
     @Shadow protected AbstractRecipeScreenHandler<?> handler;
 
-    @WrapOperation(method = "fillInputSlots(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/recipe/Recipe;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeMatcher;match(Lnet/minecraft/recipe/Recipe;Lit/unimi/dsi/fastutil/ints/IntList;)Z"))
+    @WrapOperation(method = "fillInputSlots(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/recipe/RecipeHolder;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/RecipeMatcher;match(Lnet/minecraft/recipe/Recipe;Lit/unimi/dsi/fastutil/ints/IntList;)Z"))
     private boolean blockInventoryCrafting(RecipeMatcher instance, Recipe<?> recipe, IntList output, Operation<Boolean> original, ServerPlayerEntity entity) {
         if (this.handler == entity.playerScreenHandler && InventoryKeeper.get(entity).isLocked(DefaultInventoryNodes.CRAFTING_GRID)) {
             return false;

@@ -19,7 +19,7 @@ package org.ladysnake.locki.impl.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.recipe.book.RecipeBookWidget;
+import net.minecraft.client.gui.widget.recipe_book.RecipeBookWidget;
 import org.ladysnake.locki.DefaultInventoryNodes;
 import org.ladysnake.locki.InventoryKeeper;
 import org.spongepowered.asm.mixin.Mixin;

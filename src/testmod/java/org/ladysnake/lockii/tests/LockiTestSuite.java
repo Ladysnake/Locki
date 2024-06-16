@@ -17,7 +17,6 @@
  */
 package org.ladysnake.lockii.tests;
 
-import io.github.ladysnake.elmendorf.GameTestUtil;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -27,6 +26,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.Identifier;
+import org.ladysnake.elmendorf.GameTestUtil;
 import org.ladysnake.locki.DefaultInventoryNodes;
 import org.ladysnake.locki.InventoryLock;
 import org.ladysnake.locki.InventoryNode;
@@ -36,7 +36,7 @@ import org.ladysnake.lockii.Lockii;
 import org.quiltmc.qsl.testing.api.game.QuiltGameTest;
 import org.quiltmc.qsl.testing.api.game.QuiltTestContext;
 
-import static io.github.ladysnake.elmendorf.ByteBufChecker.any;
+import static org.ladysnake.elmendorf.ByteBufChecker.any;
 
 public class LockiTestSuite implements QuiltGameTest {
     public static final InventoryLock lock = Locki.registerLock(Lockii.id("test_suite"));
@@ -74,7 +74,7 @@ public class LockiTestSuite implements QuiltGameTest {
     public void lockingPreventsItemPickup(QuiltTestContext ctx) {
         ServerPlayerEntity player = ctx.spawnServerPlayer(1, 0, 1);
         player.getInventory().addLock(lock, DefaultInventoryNodes.INVENTORY);
-        ctx.spawnItemEntity(Items.DIAMOND, 1, 0, 2);
+        ctx.spawnItemEntity(Items.DIAMOND, 1, 1, 2);
         ctx.expectEntity(EntityType.ITEM);
         player.playerTick();
         ctx.expectEntity(EntityType.ITEM);
@@ -103,7 +103,7 @@ public class LockiTestSuite implements QuiltGameTest {
     @GameTest(structureName = EMPTY_STRUCTURE)
     public void itemPickupWorks(QuiltTestContext ctx) {
         ServerPlayerEntity player = ctx.spawnServerPlayer(1, 0, 1);
-        ctx.spawnItemEntity(Items.REDSTONE, 1, 0, 1);
+        ctx.spawnItemEntity(Items.REDSTONE, 1, 1, 1);
         ctx.expectEntity(EntityType.ITEM);
         player.playerTick();
         ctx.expectNoEntity(EntityType.ITEM);

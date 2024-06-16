@@ -19,8 +19,8 @@ package org.ladysnake.locki.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.recipe.book.RecipeBookProvider;
-import net.minecraft.client.gui.screen.recipe.book.RecipeBookWidget;
+import net.minecraft.client.gui.screen.recipe_book.RecipeBookProvider;
+import net.minecraft.client.gui.widget.recipe_book.RecipeBookWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.ladysnake.locki.DefaultInventoryNodes;
